@@ -7,7 +7,6 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPlaceholder } from "@/components/map-placeholder";
 import { Phone, Mail, MessageSquare, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSiteContentFromStorage } from "@/lib/data";
@@ -125,7 +124,17 @@ export default function ContactPage() {
 
         <div className="mt-16 max-w-6xl mx-auto">
             <h2 className="text-3xl font-headline font-bold text-center mb-8">Our Office Location</h2>
-            <MapPlaceholder />
+            <div className="aspect-video w-full rounded-lg overflow-hidden border">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3846.54929841801!2d28.36502767588075!3d-15.350366016339746!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19408bb601655ba5%3A0x8c4e89277695a69d!2sWAZAI%20PROPERTIES!5e0!3m2!1sen!2sus!4v1716398325883!5m2!1sen!2sus"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen={true}
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+            </div>
         </div>
       </main>
       <Footer />
