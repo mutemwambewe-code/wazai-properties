@@ -34,6 +34,7 @@ export default function NewPropertyPage() {
     description: '',
     amenities: [],
     images: [],
+    zoning: '',
   });
   
   const [sizeValue, setSizeValue] = useState<number | ''>('');
@@ -312,7 +313,7 @@ export default function NewPropertyPage() {
           {(property.type === 'Commercial' || property.type === 'Land' || property.type === 'Mine') && (
             <div className="space-y-2">
                 <Label htmlFor="zoning">Zoning</Label>
-                <Input id="zoning" name="zoning" value={property.zoning} onChange={handleInputChange} />
+                <Input id="zoning" name="zoning" value={property.zoning || ''} onChange={handleInputChange} />
             </div>
           )}
 
