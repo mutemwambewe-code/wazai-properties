@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Building, Star, Eye } from "lucide-react";
+import { Building, Star } from "lucide-react";
 
 export default function DashboardHomePage() {
   return (
@@ -24,16 +24,6 @@ export default function DashboardHomePage() {
           <CardContent>
             <div className="text-2xl font-bold">1</div>
             <p className="text-xs text-muted-foreground">out of 3 total reviews</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Views (30 days)</CardTitle>
-            <Eye className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+1,234</div>
-            <p className="text-xs text-muted-foreground">Analytics placeholder</p>
           </CardContent>
         </Card>
       </div>
