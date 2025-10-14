@@ -2,15 +2,16 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getPropertyByIdFromStorage } from "@/lib/data";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import Image from "next/image";
+import Link from 'next/link';
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Bed, Bath, Milestone, MapPin, Building, Check, FileDown, MessageSquare } from "lucide-react";
+import { Bed, Bath, Milestone, MapPin, Building, Check, FileDown, MessageSquare, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MapPlaceholder } from "@/components/map-placeholder";
@@ -26,6 +27,7 @@ const formatPrice = (price: Property['price']) => {
 
 export default function PropertyDetailsPage() {
   const params = useParams();
+  const router = useRouter();
   const [property, setProperty] = useState<Property | null>(null);
 
   useEffect(() => {
@@ -53,6 +55,10 @@ export default function PropertyDetailsPage() {
       <main className="flex-grow py-8 sm:py-12">
         <div className="container mx-auto px-4">
           <div className="mb-6">
+             <Button variant="outline" size="sm" className="mb-4" onClick={() => router.back()}>
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to Listings
+            </Button>
             <h1 className="font-headline text-3xl md:text-4xl font-bold">{property.title}</h1>
             <p className="flex items-center text-muted-foreground mt-2">
               <MapPin className="w-5 h-5 mr-2" />
