@@ -1,5 +1,5 @@
 
-export type PropertyType = 'Commercial' | 'Residential';
+export type PropertyType = 'Commercial' | 'Residential' | 'Land' | 'Mine';
 export type PropertyStatus = 'For Sale' | 'For Rent' | 'Sold';
 export type PropertySizeUnit = 'hectares' | 'sqm' | 'acres' | 'plot';
 

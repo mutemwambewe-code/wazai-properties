@@ -1,9 +1,10 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import type { Property } from "@/lib/types";
-import { Bed, Bath, Milestone, MapPin } from "lucide-react";
+import { Bed, Bath, Milestone, MapPin, LandPlot, Hammer } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PropertyCardProps {
@@ -21,8 +22,24 @@ const formatPrice = (price: Property['price']) => {
 };
 
 export function PropertyCard({ property, className }: PropertyCardProps) {
+  const isResidential = property.type === 'Residential';
+  const isLand = property.type === 'Land';
+  const isMine = property.type === 'Mine';
   const isCommercial = property.type === 'Commercial';
   
+  const getBadgeClass = () => {
+    switch(property.type) {
+      case 'Commercial':
+        return "bg-accent text-accent-foreground";
+      case 'Land':
+        return "bg-green-600 text-white";
+      case 'Mine':
+        return "bg-gray-500 text-white";
+      default: // Residential
+        return "bg-primary";
+    }
+  }
+
   return (
     <Card className={cn("overflow-hidden hover:shadow-primary/20 hover:shadow-lg transition-shadow duration-300 group", className)}>
       <CardHeader className="p-0">
@@ -35,7 +52,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
             data-ai-hint={property.images[0].hint}
           />
           <div className="absolute top-2 left-2 flex gap-2">
-            <Badge variant={isCommercial ? "secondary" : "default"} className={isCommercial ? "bg-accent text-accent-foreground" : "bg-primary"}>
+            <Badge className={getBadgeClass()}>
               {property.type}
             </Badge>
             <Badge variant="outline" className="bg-background/80 backdrop-blur-sm">{property.status}</Badge>
@@ -52,14 +69,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
         </p>
         <div className="flex justify-between items-center pt-2">
           <div className="flex items-center gap-4 text-sm">
-            {isCommercial ? (
-              <>
-                <span className="flex items-center" title={`${property.size.value} ${property.size.unit}`}>
-                  <Milestone className="w-4 h-4 mr-2 text-primary" />
-                  {property.size.value} {property.size.unit}
-                </span>
-              </>
-            ) : (
+            {isResidential ? (
               <>
                 <span className="flex items-center" title={`${property.bedrooms} Bedrooms`}>
                   <Bed className="w-4 h-4 mr-2 text-primary" />
@@ -70,6 +80,21 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
                   {property.bathrooms}
                 </span>
               </>
+            ) : isLand ? (
+              <span className="flex items-center" title={`${property.size.value} ${property.size.unit}`}>
+                  <LandPlot className="w-4 h-4 mr-2 text-primary" />
+                  {property.size.value} {property.size.unit}
+                </span>
+            ) : isMine ? (
+               <span className="flex items-center" title={`${property.size.value} ${property.size.unit}`}>
+                  <Hammer className="w-4 h-4 mr-2 text-primary" />
+                  {property.size.value} {property.size.unit}
+                </span>
+            ) : (
+              <span className="flex items-center" title={`${property.size.value} ${property.size.unit}`}>
+                <Milestone className="w-4 h-4 mr-2 text-primary" />
+                {property.size.value} {property.size.unit}
+              </span>
             )}
           </div>
           <p className="text-xl font-bold text-primary">

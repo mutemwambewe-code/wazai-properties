@@ -124,6 +124,8 @@ export default function EditPropertyPage() {
                     <SelectContent>
                         <SelectItem value="Residential">Residential</SelectItem>
                         <SelectItem value="Commercial">Commercial</SelectItem>
+                        <SelectItem value="Land">Land</SelectItem>
+                        <SelectItem value="Mine">Mine</SelectItem>
                     </SelectContent>
                 </Select>
             </div>

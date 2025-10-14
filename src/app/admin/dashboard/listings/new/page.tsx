@@ -209,6 +209,8 @@ export default function NewPropertyPage() {
                     <SelectContent>
                         <SelectItem value="Residential">Residential</SelectItem>
                         <SelectItem value="Commercial">Commercial</SelectItem>
+                        <SelectItem value="Land">Land</SelectItem>
+                        <SelectItem value="Mine">Mine</SelectItem>
                     </SelectContent>
                 </Select>
             </div>
@@ -279,7 +281,7 @@ export default function NewPropertyPage() {
             </div>
           )}
 
-          {property.type === 'Commercial' && (
+          {(property.type === 'Commercial' || property.type === 'Land' || property.type === 'Mine') && (
             <div className="space-y-2">
                 <Label htmlFor="zoning">Zoning</Label>
                 <Input id="zoning" name="zoning" value={property.zoning} onChange={handleInputChange} />

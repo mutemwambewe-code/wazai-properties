@@ -19,6 +19,8 @@ export function FeaturedProperties() {
 
   const featuredResidential = properties.filter(p => p.type === 'Residential').slice(0, 3);
   const featuredCommercial = properties.filter(p => p.type === 'Commercial').slice(0, 3);
+  const featuredLand = properties.filter(p => p.type === 'Land').slice(0, 3);
+  const featuredMines = properties.filter(p => p.type === 'Mine').slice(0, 3);
 
   return (
     <section id="featured" className="py-16 sm:py-24">
@@ -31,22 +33,38 @@ export function FeaturedProperties() {
         </div>
 
         <Tabs defaultValue="residential" className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
+          <TabsList className="grid w-full max-w-2xl mx-auto grid-cols-4 mb-8">
             <TabsTrigger value="residential">Residential</TabsTrigger>
             <TabsTrigger value="commercial">Commercial</TabsTrigger>
+            <TabsTrigger value="land">Land</TabsTrigger>
+            <TabsTrigger value="mine">Mines</TabsTrigger>
           </TabsList>
           <TabsContent value="residential">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredResidential.map(property => (
+              {featuredResidential.length > 0 ? featuredResidential.map(property => (
                 <PropertyCard key={property.id} property={property} />
-              ))}
+              )) : <p className="col-span-3 text-center text-muted-foreground">No featured residential properties.</p>}
             </div>
           </TabsContent>
           <TabsContent value="commercial">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredCommercial.map(property => (
+              {featuredCommercial.length > 0 ? featuredCommercial.map(property => (
                 <PropertyCard key={property.id} property={property} />
-              ))}
+              )) : <p className="col-span-3 text-center text-muted-foreground">No featured commercial properties.</p>}
+            </div>
+          </TabsContent>
+           <TabsContent value="land">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredLand.length > 0 ? featuredLand.map(property => (
+                <PropertyCard key={property.id} property={property} />
+              )) : <p className="col-span-3 text-center text-muted-foreground">No featured land properties.</p>}
+            </div>
+          </TabsContent>
+           <TabsContent value="mine">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {featuredMines.length > 0 ? featuredMines.map(property => (
+                <PropertyCard key={property.id} property={property} />
+              )) : <p className="col-span-3 text-center text-muted-foreground">No featured mines.</p>}
             </div>
           </TabsContent>
         </Tabs>

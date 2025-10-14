@@ -63,6 +63,8 @@ export default function ListingsPage() {
                         <SelectItem value="all">All Types</SelectItem>
                         <SelectItem value="residential">Residential</SelectItem>
                         <SelectItem value="commercial">Commercial</SelectItem>
+                        <SelectItem value="land">Land</SelectItem>
+                        <SelectItem value="mine">Mine</SelectItem>
                     </SelectContent>
                 </Select>
                 {/* Search button could trigger filtering, but here it's live-updating */}

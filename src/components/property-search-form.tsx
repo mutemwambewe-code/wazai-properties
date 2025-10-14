@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState } from 'react';
@@ -17,7 +18,7 @@ import { suggestProperties } from '@/ai/flows/property-search-suggestions';
 const searchSchema = z.object({
   query: z.string().optional(),
   location: z.string().optional(),
-  propertyType: z.enum(['Commercial', 'Residential', 'Any']).default('Any'),
+  propertyType: z.enum(['Commercial', 'Residential', 'Land', 'Mine', 'Any']).default('Any'),
   status: z.enum(['For Sale', 'For Rent', 'Any']).default('Any'),
 });
 
@@ -148,6 +149,8 @@ export function PropertySearchForm() {
                       <SelectItem value="Any">Any Type</SelectItem>
                       <SelectItem value="Residential">Residential</SelectItem>
                       <SelectItem value="Commercial">Commercial</SelectItem>
+                      <SelectItem value="Land">Land</SelectItem>
+                      <SelectItem value="Mine">Mine</SelectItem>
                     </SelectContent>
                   </Select>
                 </FormItem>
