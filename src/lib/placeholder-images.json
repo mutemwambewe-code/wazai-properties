@@ -1,3 +1,70 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero-banner",
+      "description": "Aerial view of a city skyline at dusk",
+      "imageUrl": "https://picsum.photos/seed/hero/1920/1080",
+      "imageHint": "city skyline"
+    },
+    {
+      "id": "commercial-1",
+      "description": "Modern office building exterior",
+      "imageUrl": "https://picsum.photos/seed/comm1/600/400",
+      "imageHint": "office building"
+    },
+    {
+      "id": "commercial-2",
+      "description": "Large undeveloped plot of land with city in background",
+      "imageUrl": "https://picsum.photos/seed/comm2/600/400",
+      "imageHint": "land development"
+    },
+    {
+      "id": "commercial-3",
+      "description": "Industrial warehouse exterior",
+      "imageUrl": "https://picsum.photos/seed/comm3/600/400",
+      "imageHint": "industrial warehouse"
+    },
+    {
+      "id": "residential-1",
+      "description": "Modern suburban house with a garden",
+      "imageUrl": "https://picsum.photos/seed/res1/600/400",
+      "imageHint": "modern house"
+    },
+    {
+      "id": "residential-2",
+      "description": "Luxury apartment building with balconies",
+      "imageUrl": "https://picsum.photos/seed/res2/600/400",
+      "imageHint": "apartment building"
+    },
+    {
+      "id": "residential-3",
+      "description": "Cozy flat interior living room",
+      "imageUrl": "https://picsum.photos/seed/res3/600/400",
+      "imageHint": "apartment interior"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Profile picture of a person",
+      "imageUrl": "https://picsum.photos/seed/test1/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Profile picture of a person",
+      "imageUrl": "https://picsum.photos/seed/test2/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Profile picture of a person",
+      "imageUrl": "https://picsum.photos/seed/test3/100/100",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "office-location",
+      "description": "Exterior of a modern office building",
+      "imageUrl": "https://picsum.photos/seed/office/800/600",
+      "imageHint": "office building"
+    }
+  ]
 }

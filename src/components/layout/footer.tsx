@@ -1,0 +1,59 @@
+import Link from 'next/link';
+import { Building2, Facebook, Linkedin, Twitter } from 'lucide-react';
+import { Button } from '../ui/button';
+
+export function Footer() {
+  return (
+    <footer className="w-full border-t border-border/40 bg-background/95">
+      <div className="container max-w-screen-2xl py-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="flex flex-col items-start space-y-4">
+            <Link href="/" className="flex items-center space-x-2">
+              <Building2 className="h-8 w-8 text-primary" />
+              <span className="text-xl font-bold font-headline">
+                Zambia Homes & Investments
+              </span>
+            </Link>
+            <p className="text-muted-foreground text-sm">
+              Invest. Build. Live. Find your ideal property in Zambia.
+            </p>
+          </div>
+          <div className="md:col-start-2">
+            <h4 className="font-semibold mb-2">Quick Links</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/listings" className="text-muted-foreground hover:text-primary">All Listings</Link></li>
+              <li><Link href="/#featured" className="text-muted-foreground hover:text-primary">Featured</Link></li>
+              <li><Link href="/contact" className="text-muted-foreground hover:text-primary">Contact Us</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Contact</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li>123 Independence Ave</li>
+              <li>Lusaka, Zambia</li>
+              <li><a href="tel:+260977123456" className="hover:text-primary">+260 977 123456</a></li>
+              <li><a href="mailto:info@zambia.homes" className="hover:text-primary">info@zambia.homes</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold mb-2">Follow Us</h4>
+            <div className="flex space-x-2">
+              <Button variant="ghost" size="icon" asChild>
+                <a href="#" aria-label="Twitter"><Twitter className="h-5 w-5 text-muted-foreground" /></a>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <a href="#" aria-label="Facebook"><Facebook className="h-5 w-5 text-muted-foreground" /></a>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <a href="#" aria-label="LinkedIn"><Linkedin className="h-5 w-5 text-muted-foreground" /></a>
+              </Button>
+            </div>
+          </div>
+        </div>
+        <div className="mt-8 border-t border-border/40 pt-4 text-center text-sm text-muted-foreground">
+          <p>&copy; {new Date().getFullYear()} Zambia Homes & Investments. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
