@@ -5,50 +5,17 @@ import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Phone, Mail, MessageSquare, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSiteContentFromStorage } from "@/lib/data";
 import type { SiteContent } from "@/lib/types";
-import { useToast } from "@/hooks/use-toast";
 
 export default function ContactPage() {
   const [content, setContent] = useState<SiteContent | null>(null);
-  const [formState, setFormState] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-  const { toast } = useToast();
 
   useEffect(() => {
     setContent(getSiteContentFromStorage());
   }, []);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormState(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Form Submitted:', formState);
-
-    toast({
-        title: "Message Sent!",
-        description: "Thank you for contacting us. We'll get back to you shortly.",
-    });
-
-    // Reset form
-    setFormState({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
-    });
-  };
 
   if (!content) {
     return (
@@ -75,25 +42,8 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl">Send us a Message</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input name="name" placeholder="Your Name" value={formState.name} onChange={handleInputChange} required />
-                  <Input name="email" type="email" placeholder="Your Email" value={formState.email} onChange={handleInputChange} required />
-                </div>
-                <Input name="subject" placeholder="Subject" value={formState.subject} onChange={handleInputChange} required />
-                <Textarea name="message" placeholder="Your Message" rows={6} value={formState.message} onChange={handleInputChange} required />
-                <Button type="submit" size="lg" className="w-full">Send Message</Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          <div className="space-y-8">
+        <div className="flex justify-center">
+          <div className="space-y-8 w-full max-w-lg">
             <Card>
               <CardHeader>
                 <CardTitle className="font-headline text-2xl">Contact Information</CardTitle>
