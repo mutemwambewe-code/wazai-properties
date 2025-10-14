@@ -121,7 +121,7 @@ export const testimonials: Testimonial[] = [
 export const defaultSiteContent: SiteContent = {
   heroHeadline: 'Invest. Build. Live.',
   heroSubheadline: 'Find Your Ideal Property in Zambia.',
-  contactPhone: '+260 977 123456',
+  contactPhone: '+260978227584',
   contactEmail: 'info@zambia.homes',
   contactAddress: '123 Independence Ave, Lusaka, Zambia',
 };

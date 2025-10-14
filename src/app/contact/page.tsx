@@ -115,7 +115,7 @@ export default function ContactPage() {
             </Card>
             
             <Button asChild size="lg" className="w-full h-14 text-lg">
-                <a href={`https://wa.me/${content.contactPhone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                <a href="https://wa.me/260978227584" target="_blank" rel="noopener noreferrer">
                     <MessageSquare className="h-6 w-6 mr-3" /> Chat on WhatsApp
                 </a>
             </Button>
