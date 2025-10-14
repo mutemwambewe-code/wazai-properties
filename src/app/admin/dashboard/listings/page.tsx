@@ -6,12 +6,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { properties as initialProperties, getPropertyByIdFromStorage, savePropertiesToStorage } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
-import { MoreHorizontal, PlusCircle, Trash2 } from "lucide-react";
+import { MoreHorizontal, PlusCircle, Trash2, Search } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import type { Property } from "@/lib/types";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const formatPrice = (price: Property['price']) => {
     return new Intl.NumberFormat('en-US', {
@@ -24,6 +25,7 @@ const formatPrice = (price: Property['price']) => {
 export default function ListingsManagementPage() {
     const [properties, setProperties] = useState<Property[]>([]);
     const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const storedProperties = localStorage.getItem('properties');
@@ -44,6 +46,10 @@ export default function ListingsManagementPage() {
         }
     };
 
+    const filteredProperties = properties.filter(prop =>
+        prop.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <>
             <Card>
@@ -52,9 +58,21 @@ export default function ListingsManagementPage() {
                         <CardTitle>Properties</CardTitle>
                         <CardDescription>Manage your property listings.</CardDescription>
                     </div>
-                    <Button asChild size="sm" className="ml-auto gap-1">
-                        <Link href="/admin/dashboard/listings/new"><PlusCircle className="h-3.5 w-3.5" /><span>Add Property</span></Link>
-                    </Button>
+                    <div className="ml-auto flex items-center gap-4">
+                        <div className="relative">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                            <Input
+                                type="search"
+                                placeholder="Search by title..."
+                                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <Button asChild size="sm" className="gap-1">
+                            <Link href="/admin/dashboard/listings/new"><PlusCircle className="h-3.5 w-3.5" /><span>Add Property</span></Link>
+                        </Button>
+                    </div>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -68,7 +86,7 @@ export default function ListingsManagementPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {properties.map(prop => (
+                            {filteredProperties.map(prop => (
                                 <TableRow key={prop.id}>
                                     <TableCell className="font-medium">{prop.title}</TableCell>
                                     <TableCell><Badge variant="outline">{prop.type}</Badge></TableCell>
