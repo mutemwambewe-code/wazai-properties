@@ -23,7 +23,7 @@ export function AdminSidebarNav() {
 
   const handleLogout = async () => {
     await signOut(auth);
-    router.push('/admin/login');
+    router.push('/');
   };
 
   return (
