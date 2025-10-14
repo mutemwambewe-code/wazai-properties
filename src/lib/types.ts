@@ -1,5 +1,7 @@
+
 export type PropertyType = 'Commercial' | 'Residential';
 export type PropertyStatus = 'For Sale' | 'For Rent' | 'Sold';
+export type PropertySizeUnit = 'hectares' | 'sqm' | 'acres' | 'plot';
 
 export interface Property {
   id: string;
@@ -13,7 +15,7 @@ export interface Property {
   location: string;
   size: {
     value: number;
-    unit: 'hectares' | 'sqm' | 'plot';
+    unit: PropertySizeUnit;
   };
   bedrooms?: number;
   bathrooms?: number;
