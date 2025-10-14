@@ -1,0 +1,122 @@
+/**
+ * @fileoverview Firestore Security Rules for the real estate application.
+ *
+ * Core Philosophy:
+ * This ruleset implements a role-based access control system, primarily using the
+ * presence of a user ID in the `/roles_admin/{userId}` collection to grant admin
+ * privileges. Admin users have full CRUD access to property listings, reviews,
+ * and website content. Read access to property listings is public, but write
+ * access is restricted to admins.
+ *
+ * Data Structure:
+ * - /propertyListings/{propertyListingId}: Stores property listings. Publicly readable,
+ *   but only admins can create, update, or delete.
+ * - /reviews/{reviewId}: Stores website reviews. Only admins can create, update, or delete.
+ * - /roles_admin/{userId}: Stores admin user IDs. The existence of a document here
+ *   grants admin privileges to the corresponding user.
+ * - /websiteContent/{contentId}: Stores website content. Only admins can create,
+ *   update, or delete.
+ *
+ * Key Security Decisions:
+ * - Public read access to property listings is allowed.
+ * - Listing or reading admin users is explicitly denied.
+ * - All write operations (create, update, delete) on protected collections are
+ *   restricted to admin users.
+ * - No data type or schema validation is performed in this prototyping phase.
+ *
+ * Denormalization for Authorization:
+ * The existence of a document in `/roles_admin/{userId}` is used as a signal for
+ * admin privileges. This denormalization avoids costly `get()` calls to a separate
+ * roles collection during authorization checks.
+ *
+ * Structural Segregation:
+ * Public read access to property listings is enabled via a top-level collection
+ * (`/propertyListings`).
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * @description Checks if the current user is an admin.
+     * @param {string} userId The user ID to check.
+     * @return {bool} True if the user is an admin, false otherwise.
+     */
+    function isAdmin(userId) {
+      return exists(/databases/$(database)/documents/roles_admin/$(userId));
+    }
+
+    /**
+     * @description Checks if the user is signed in
+     * @return {bool} True if the user is signed in, false otherwise.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * @description Check if the resource exists.
+     * @return {bool} True if the resource exists, false otherwise.
+     */
+    function resourceExists() {
+        return resource != null;
+    }
+
+    /**
+     * @description Rules for the /propertyListings/{propertyListingId} collection.
+     * @path /propertyListings/{propertyListingId}
+     * @allow (get, list): if true (public read access).
+     * @allow (create, update, delete): if isAdmin(request.auth.uid).
+     * @deny (create, update, delete): if the user is not an admin.
+     * @principle Allows public read access but restricts write access to admins only.
+     */
+    match /propertyListings/{propertyListingId} {
+      allow get, list: if true;
+      allow create, update, delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    /**
+     * @description Rules for the /reviews/{reviewId} collection.
+     * @path /reviews/{reviewId}
+     * @allow (get, list): if isAdmin(request.auth.uid).
+     * @allow (create, update, delete): if isAdmin(request.auth.uid).
+     * @deny (get, list, create, update, delete): if the user is not an admin.
+     * @principle Restricts all access to the reviews collection to admins only.
+     */
+    match /reviews/{reviewId} {
+      allow get, list: if isSignedIn() && isAdmin(request.auth.uid);
+      allow create, update, delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+
+    /**
+     * @description Rules for the /roles_admin/{userId} collection.
+     * @path /roles_admin/{userId}
+     * @allow create: if request.auth.uid == userId;
+     * @allow get: if request.auth.uid == userId;
+     * @allow delete: if request.auth.uid == userId;
+     * @deny list: if true.
+     * @deny update: if true.
+     * @principle Allows a user to create, get, and delete their own admin role document.
+     */
+    match /roles_admin/{userId} {
+        allow create: if isSignedIn() && request.auth.uid == userId;
+        allow get: if isSignedIn() && request.auth.uid == userId;
+        allow update: if false;
+        allow delete: if isSignedIn() && request.auth.uid == userId;
+        allow list: if false;
+    }
+
+    /**
+     * @description Rules for the /websiteContent/{contentId} collection.
+     * @path /websiteContent/{contentId}
+     * @allow (get, list): if isAdmin(request.auth.uid).
+     * @allow (create, update, delete): if isAdmin(request.auth.uid).
+     * @deny (get, list, create, update, delete): if the user is not an admin.
+     * @principle Restricts all access to the website content collection to admins only.
+     */
+    match /websiteContent/{contentId} {
+      allow get, list: if isSignedIn() && isAdmin(request.auth.uid);
+      allow create, update, delete: if isSignedIn() && isAdmin(request.auth.uid);
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "entities": {
+    "PropertyListing": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PropertyListing",
+      "type": "object",
+      "description": "Represents a real estate property listing, either commercial or residential.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the property listing."
+        },
+        "title": {
+          "type": "string",
+          "description": "Title of the property listing."
+        },
+        "propertyType": {
+          "type": "string",
+          "description": "Type of the property (Commercial or Residential)."
+        },
+        "saleRentStatus": {
+          "type": "string",
+          "description": "Status of the property (For Sale, For Rent, Sold)."
+        },
+        "price": {
+          "type": "number",
+          "description": "Price of the property (USD or ZMW)."
+        },
+        "location": {
+          "type": "string",
+          "description": "Location of the property."
+        },
+        "size": {
+          "type": "string",
+          "description": "Size of the property (hectares, square meters, or plot size)."
+        },
+        "bedrooms": {
+          "type": "number",
+          "description": "Number of bedrooms (for residential properties)."
+        },
+        "bathrooms": {
+          "type": "number",
+          "description": "Number of bathrooms (for residential properties)."
+        },
+        "zoning": {
+          "type": "string",
+          "description": "Zoning or permitted use (for commercial properties)."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of the property."
+        },
+        "amenities": {
+          "type": "string",
+          "description": "Amenities of the property (e.g., parking, water, internet)."
+        },
+        "investmentPotential": {
+          "type": "string",
+          "description": "Investment potential text (for commercial listings)."
+        },
+        "imageUrls": {
+          "type": "array",
+          "description": "URLs of property images.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "propertyType",
+        "saleRentStatus",
+        "price",
+        "location",
+        "size",
+        "description"
+      ]
+    },
+    "Review": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Review",
+      "type": "object",
+      "description": "Represents a review or testimonial for the website.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the review."
+        },
+        "reviewerName": {
+          "type": "string",
+          "description": "Name of the reviewer."
+        },
+        "starRating": {
+          "type": "number",
+          "description": "Star rating given by the reviewer."
+        },
+        "comment": {
+          "type": "string",
+          "description": "Reviewer's comment."
+        },
+        "approved": {
+          "type": "boolean",
+          "description": "Indicates whether the review has been approved for display."
+        }
+      },
+      "required": [
+        "id",
+        "reviewerName",
+        "starRating",
+        "comment",
+        "approved"
+      ]
+    },
+    "AdminUser": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AdminUser",
+      "type": "object",
+      "description": "Represents an administrative user with access to the admin dashboard.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the admin user."
+        },
+        "email": {
+          "type": "string",
+          "description": "Email address of the admin user.",
+          "format": "email"
+        }
+      },
+      "required": [
+        "id",
+        "email"
+      ]
+    },
+    "WebsiteContent": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "WebsiteContent",
+      "type": "object",
+      "description": "Represents various content sections of the website.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the website content."
+        },
+        "contentType": {
+          "type": "string",
+          "description": "Type of content (e.g., HomepageHero, AboutUs, ContactInfo)."
+        },
+        "contentValue": {
+          "type": "string",
+          "description": "The actual content (text, HTML, JSON) of the section."
+        }
+      },
+      "required": [
+        "id",
+        "contentType",
+        "contentValue"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/propertyListings/{propertyListingId}",
+        "definition": {
+          "entityName": "PropertyListing",
+          "schema": {
+            "$ref": "#/backend/entities/PropertyListing"
+          },
+          "description": "Stores all property listings (commercial and residential).",
+          "params": [
+            {
+              "name": "propertyListingId",
+              "description": "Unique identifier for the property listing."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/reviews/{reviewId}",
+        "definition": {
+          "entityName": "Review",
+          "schema": {
+            "$ref": "#/backend/entities/Review"
+          },
+          "description": "Stores reviews and testimonials for the website.",
+          "params": [
+            {
+              "name": "reviewId",
+              "description": "Unique identifier for the review."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "AdminUser",
+          "schema": {
+            "$ref": "#/backend/entities/AdminUser"
+          },
+          "description": "Stores admin user IDs. Existence of a document indicates admin privileges.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "Unique identifier for the admin user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/websiteContent/{contentId}",
+        "definition": {
+          "entityName": "WebsiteContent",
+          "schema": {
+            "$ref": "#/backend/entities/WebsiteContent"
+          },
+          "description": "Stores various content sections of the website (e.g., HomepageHero, AboutUs).",
+          "params": [
+            {
+              "name": "contentId",
+              "description": "Unique identifier for the website content."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "To secure the admin dashboard and property listings management, I've implemented role-based access control using a dedicated `/roles_admin/{uid}` collection. Only users with a document in this collection will be considered admins and allowed to access the admin dashboard and modify listings. This approach avoids complex `get()` calls in security rules, ensuring authorization independence. \n\nThe structure includes collections for `propertyListings`, `reviews`, `websiteContent`, and `adminUsers`. The `/roles_admin/{uid}` collection determines admin access.\n\n**Authorization Independence:** The design uses the existence of a document in `/roles_admin/{uid}` to grant admin privileges, eliminating the need to fetch parent document data during authorization.\n\n**QAPs Support:**\n*   Secure `list` operations for property listings are enabled through structure segregation. Public listings reside in the `/propertyListings` collection and access is not conditional on admin status.\n*   The `/roles_admin/{uid}` collection allows secure filtering of admin users without exposing sensitive data. Security rules will check for the existence of a document in this collection before granting access to admin-related functionalities."
+  }
+}
