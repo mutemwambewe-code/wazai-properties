@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -39,9 +40,14 @@ export default function NewPropertyPage() {
   });
   
   const [sizeValue, setSizeValue] = useState<number | ''>('');
+  const [priceAmount, setPriceAmount] = useState<number | ''>('');
   const [sizeUnit, setSizeUnit] = useState<PropertySizeUnit>('sqm');
   const [amenitiesInput, setAmenitiesInput] = useState('');
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+
+  useEffect(() => {
+    setProperty(prev => ({ ...prev, price: { ...prev.price, amount: 0 } as Property['price'] }));
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -52,16 +58,29 @@ export default function NewPropertyPage() {
     setProperty({ ...property, [name]: value });
   };
   
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+  const handlePriceInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === '') {
+        setPriceAmount('');
+        setProperty(prev => ({ ...prev, price: { ...prev.price, amount: 0 } as Property['price'] }));
+    } else {
+        const numericValue = parseFloat(value);
+        if (!isNaN(numericValue)) {
+            setPriceAmount(numericValue);
+            setProperty(prev => ({ ...prev, price: { ...prev.price, amount: numericValue } as Property['price'] }));
+        }
+    }
+  };
+
+  const handlePriceSelectChange = (value: string) => {
     setProperty({
         ...property,
         price: {
             ...property.price,
-            [name]: name === 'amount' ? Number(value) : value,
+            currency: value as 'USD' | 'ZMW',
         } as Property['price']
     });
-  };
+  }
 
   const handleSizeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -238,11 +257,11 @@ export default function NewPropertyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
                 <Label htmlFor="price-amount">Price Amount</Label>
-                <Input id="price-amount" name="amount" type="number" value={property.price?.amount} onChange={handlePriceChange} />
+                <Input id="price-amount" name="amount" type="number" value={priceAmount} onChange={handlePriceInputChange} placeholder="Enter price"/>
             </div>
             <div className="space-y-2">
                 <Label htmlFor="price-currency">Price Currency</Label>
-                 <Select name="currency" value={property.price?.currency} onValueChange={(value) => handleSelectChange('price', { ...property.price, currency: value as 'USD' | 'ZMW' })}>
+                 <Select name="currency" value={property.price?.currency} onValueChange={handlePriceSelectChange}>
                     <SelectTrigger id="price-currency"><SelectValue /></SelectTrigger>
                     <SelectContent>
                         <SelectItem value="USD">USD</SelectItem>
