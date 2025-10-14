@@ -26,6 +26,11 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
   const isLand = property.type === 'Land';
   const isMine = property.type === 'Mine';
   const isCommercial = property.type === 'Commercial';
+
+  const hasImages = property.images && property.images.length > 0;
+  const firstImage = hasImages 
+    ? property.images[0] 
+    : { url: `https://picsum.photos/seed/${property.id}/600/400`, description: 'Placeholder image', hint: 'property exterior' };
   
   const getBadgeClass = () => {
     switch(property.type) {
@@ -45,11 +50,11 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
       <CardHeader className="p-0">
         <Link href={`/listings/${property.id}`} className="block relative h-56 w-full">
           <Image
-            src={property.images[0].url}
-            alt={property.images[0].description}
+            src={firstImage.url}
+            alt={firstImage.description}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
-            data-ai-hint={property.images[0].hint}
+            data-ai-hint={firstImage.hint}
           />
           <div className="absolute top-2 left-2 flex gap-2">
             <Badge className={getBadgeClass()}>
