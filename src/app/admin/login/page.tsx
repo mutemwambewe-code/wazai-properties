@@ -1,21 +1,50 @@
-"use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Building2 } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+'use client';
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Building2 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/firebase';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const auth = useAuth();
+  const { toast } = useToast();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSigningUp, setIsSigningUp] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleAuthAction = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would perform authentication here.
-    // On success, redirect to the dashboard.
-    router.push('/admin/dashboard');
+    try {
+      if (isSigningUp) {
+        await createUserWithEmailAndPassword(auth, email, password);
+        toast({
+          title: 'Account Created',
+          description: 'You have successfully signed up. Please log in.',
+        });
+        setIsSigningUp(false); // Switch to login view after signup
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        router.push('/admin/dashboard');
+      }
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Authentication Failed',
+        description: error.message,
+      });
+    }
   };
 
   return (
@@ -23,17 +52,17 @@ export default function AdminLoginPage() {
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-             <Link href="/" className="flex items-center space-x-2">
-                <Building2 className="h-10 w-10 text-primary" />
-             </Link>
+            <Link href="/" className="flex items-center space-x-2">
+              <Building2 className="h-10 w-10 text-primary" />
+            </Link>
           </div>
-          <CardTitle className="text-2xl font-headline">Admin Login</CardTitle>
+          <CardTitle className="text-2xl font-headline">{isSigningUp ? 'Create Admin Account' : 'Admin Login'}</CardTitle>
           <CardDescription>
             Enter your credentials to access the dashboard
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin} className="grid gap-4">
+          <form onSubmit={handleAuthAction} className="grid gap-4">
             <div className="grid gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -41,18 +70,43 @@ export default function AdminLoginPage() {
                 type="email"
                 placeholder="m@example.com"
                 required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
               <div className="flex items-center">
                 <Label htmlFor="password">Password</Label>
               </div>
-              <Input id="password" type="password" required />
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
             <Button type="submit" className="w-full mt-2">
-              Login
+              {isSigningUp ? 'Sign Up' : 'Login'}
             </Button>
           </form>
+          <div className="mt-4 text-center text-sm">
+            {isSigningUp ? (
+              <>
+                Already have an account?{' '}
+                <Button variant="link" className="p-0 h-auto" onClick={() => setIsSigningUp(false)}>
+                  Login
+                </Button>
+              </>
+            ) : (
+              <>
+                Don&apos;t have an account?{' '}
+                <Button variant="link" className="p-0 h-auto" onClick={() => setIsSigningUp(true)}>
+                  Sign up
+                </Button>
+              </>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
