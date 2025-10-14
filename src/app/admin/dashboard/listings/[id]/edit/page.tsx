@@ -57,7 +57,13 @@ export default function EditPropertyPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!property) return;
     const { name, value } = e.target;
-    updateAndSaveProperty({ ...property, [name]: value });
+    let finalValue: string | number = value;
+
+    if (name === 'bedrooms' || name === 'bathrooms') {
+      finalValue = value === '' ? 0 : Number(value);
+    }
+    
+    updateAndSaveProperty({ ...property, [name]: finalValue });
   };
   
   const handleSelectChange = (name: keyof Property, value: string) => {
@@ -228,6 +234,19 @@ export default function EditPropertyPage() {
             <Label htmlFor="location">Location</Label>
             <Input id="location" name="location" value={property.location} onChange={handleInputChange} />
           </div>
+
+          {property.type === 'Residential' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor="bedrooms">Bedrooms</Label>
+                <Input id="bedrooms" name="bedrooms" type="number" value={property.bedrooms || ''} onChange={handleInputChange} placeholder="e.g. 4" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bathrooms">Bathrooms</Label>
+                <Input id="bathrooms" name="bathrooms" type="number" value={property.bathrooms || ''} onChange={handleInputChange} placeholder="e.g. 5" />
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="amenities">Amenities (comma-separated)</Label>
