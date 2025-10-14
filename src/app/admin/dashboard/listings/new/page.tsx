@@ -12,8 +12,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2, Upload } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const HECTARES_IN_ACRE = 0.404686;
 const SQM_IN_HECTARE = 10000;
@@ -40,6 +41,7 @@ export default function NewPropertyPage() {
   const [sizeValue, setSizeValue] = useState(0);
   const [sizeUnit, setSizeUnit] = useState<PropertySizeUnit>('sqm');
   const [amenitiesInput, setAmenitiesInput] = useState('');
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -109,6 +111,43 @@ export default function NewPropertyPage() {
     return convertSize(property.size.value, property.size.unit, targetUnit);
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const newImages = [...(property.images || [])];
+      const newPreviews = [...imagePreviews];
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const dataUrl = reader.result as string;
+          newImages.push({
+            id: `img-${Date.now()}-${Math.random()}`,
+            url: dataUrl,
+            description: file.name,
+            hint: 'uploaded image'
+          });
+          newPreviews.push(dataUrl);
+
+          // This is async, so we update state inside the callback
+          if (newImages.length === (property.images?.length || 0) + files.length) {
+            setProperty(prev => ({ ...prev, images: newImages }));
+            setImagePreviews(newPreviews);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setProperty(prev => ({
+      ...prev,
+      images: prev.images?.filter((_, i) => i !== index)
+    }));
+    setImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,7 +156,7 @@ export default function NewPropertyPage() {
         id: `prop-${Date.now()}`,
         ...property,
         amenities: amenitiesInput.split(',').map(a => a.trim()).filter(Boolean),
-        images: property.images?.length ? property.images : [{ id: 'default', url: `https://picsum.photos/seed/${Date.now()}/600/400`, description: 'Newly added property', hint: 'building exterior' }],
+        images: (property.images?.length ? property.images : [{ id: 'default', url: `https://picsum.photos/seed/${Date.now()}/600/400`, description: 'Newly added property', hint: 'building exterior' }]),
         agent: { name: 'Admin User', phone: '+260977123456', email: 'info@zambia.homes' },
         coordinates: { lat: -15.4167, lng: 28.2833 }
     } as Property;
@@ -257,13 +296,36 @@ export default function NewPropertyPage() {
             <Textarea id="description" name="description" value={property.description} onChange={handleInputChange} rows={5} />
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Label>Images</Label>
-            <div className="border rounded-md p-4 text-center text-muted-foreground">
-                <p>Image upload functionality coming soon.</p>
-                <p className="text-sm">A default placeholder image will be used for now.</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {imagePreviews.map((src, index) => (
+                    <div key={index} className="relative group aspect-video">
+                        <Image src={src} alt={`Preview ${index + 1}`} fill className="object-cover rounded-md" />
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => removeImage(index)}
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
+                ))}
+                <Label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-muted-foreground">
+                        <Upload className="w-8 h-8 mb-2" />
+                        <p className="mb-2 text-sm text-center">Click to upload or drag & drop</p>
+                    </div>
+                    <Input id="image-upload" type="file" multiple className="hidden" onChange={handleImageChange} accept="image/*" />
+                </Label>
             </div>
+            {(property.images?.length || 0) === 0 && (
+              <p className="text-sm text-muted-foreground">No images uploaded. A default placeholder will be used.</p>
+            )}
           </div>
+
 
           <div className="flex justify-end gap-2">
              <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
