@@ -140,7 +140,12 @@ export const getPropertiesFromStorage = (): Property[] => {
     if (typeof window !== 'undefined') {
         const storedProperties = localStorage.getItem('properties');
         if (storedProperties) {
-            return JSON.parse(storedProperties);
+            try {
+                const parsed = JSON.parse(storedProperties);
+                if (Array.isArray(parsed)) return parsed;
+            } catch (e) {
+                console.error("Failed to parse properties from localStorage", e);
+            }
         }
     }
     return properties;
@@ -156,7 +161,12 @@ export const getSiteContentFromStorage = (): SiteContent => {
     if (typeof window !== 'undefined') {
         const storedContent = localStorage.getItem('siteContent');
         if (storedContent) {
-            return JSON.parse(storedContent);
+             try {
+                const parsed = JSON.parse(storedContent);
+                return { ...defaultSiteContent, ...parsed };
+            } catch (e) {
+                console.error("Failed to parse site content from localStorage", e);
+            }
         }
     }
     return defaultSiteContent;
@@ -166,4 +176,21 @@ export const saveSiteContentToStorage = (content: SiteContent) => {
     if (typeof window !== 'undefined') {
         localStorage.setItem('siteContent', JSON.stringify(content));
     }
+};
+
+export const getTestimonialsFromStorage = (): Testimonial[] => {
+    if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('testimonials');
+        try {
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to parse testimonials from localStorage", e);
+        }
+    }
+    return testimonials;
 };
