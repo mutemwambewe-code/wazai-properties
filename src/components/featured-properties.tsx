@@ -1,4 +1,9 @@
-import { properties } from "@/lib/data";
+
+'use client';
+
+import { useState, useEffect } from "react";
+import type { Property } from "@/lib/types";
+import { getPropertiesFromStorage } from "@/lib/data";
 import { PropertyCard } from "./property-card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "./ui/button";
@@ -6,11 +11,17 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 export function FeaturedProperties() {
+  const [properties, setProperties] = useState<Property[]>([]);
+
+  useEffect(() => {
+    setProperties(getPropertiesFromStorage());
+  }, []);
+
   const featuredResidential = properties.filter(p => p.type === 'Residential').slice(0, 3);
   const featuredCommercial = properties.filter(p => p.type === 'Commercial').slice(0, 3);
 
   return (
-    <section id="featured" className="py-16 sm:py-24 bg-card">
+    <section id="featured" className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">Featured Properties</h2>

@@ -1,8 +1,13 @@
+
+'use client';
+
 import Image from "next/image";
-import { testimonials } from "@/lib/data";
+import { testimonials as initialTestimonials } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Star } from "lucide-react";
+import { useEffect, useState } from "react";
+import type { Testimonial } from "@/lib/types";
 
 const StarRating = ({ rating }: { rating: number }) => (
   <div className="flex items-center">
@@ -15,9 +20,26 @@ const StarRating = ({ rating }: { rating: number }) => (
   </div>
 );
 
+const getTestimonialsFromStorage = (): Testimonial[] => {
+    if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem('testimonials');
+        if (stored) {
+            return JSON.parse(stored);
+        }
+    }
+    return initialTestimonials;
+};
+
+
 export function Testimonials() {
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    setTestimonials(getTestimonialsFromStorage());
+  }, []);
+
   return (
-    <section id="testimonials" className="py-16 sm:py-24 bg-background">
+    <section id="testimonials" className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">What Our Clients Say</h2>

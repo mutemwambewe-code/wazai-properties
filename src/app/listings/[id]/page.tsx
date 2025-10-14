@@ -1,4 +1,9 @@
-import { getPropertyById, properties } from "@/lib/data";
+
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation';
+import { getPropertyByIdFromStorage } from "@/lib/data";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import Image from "next/image";
@@ -18,17 +23,26 @@ const formatPrice = (price: Property['price']) => {
   }).format(price.amount);
 };
 
-export function generateStaticParams() {
-    return properties.map((property) => ({
-        id: property.id,
-    }));
-}
 
-export default function PropertyDetailsPage({ params }: { params: { id: string } }) {
-  const property = getPropertyById(params.id);
+export default function PropertyDetailsPage() {
+  const params = useParams();
+  const [property, setProperty] = useState<Property | null>(null);
+
+  useEffect(() => {
+    if (params.id && typeof params.id === 'string') {
+        const prop = getPropertyByIdFromStorage(params.id);
+        if (prop) {
+            setProperty(prop);
+        } else {
+            notFound();
+        }
+    }
+  }, [params.id]);
+
 
   if (!property) {
-    notFound();
+    // You can return a loading spinner here
+    return <div>Loading...</div>;
   }
 
   const isCommercial = property.type === 'Commercial';
