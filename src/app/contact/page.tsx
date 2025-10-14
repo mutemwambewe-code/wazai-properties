@@ -12,13 +12,44 @@ import { Phone, Mail, MessageSquare, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getSiteContentFromStorage } from "@/lib/data";
 import type { SiteContent } from "@/lib/types";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ContactPage() {
   const [content, setContent] = useState<SiteContent | null>(null);
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+  const { toast } = useToast();
 
   useEffect(() => {
     setContent(getSiteContentFromStorage());
   }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormState(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form Submitted:', formState);
+
+    toast({
+        title: "Message Sent!",
+        description: "Thank you for contacting us. We'll get back to you shortly.",
+    });
+
+    // Reset form
+    setFormState({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
+  };
 
   if (!content) {
     return (
@@ -51,13 +82,13 @@ export default function ContactPage() {
               <CardTitle className="font-headline text-2xl">Send us a Message</CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <Input placeholder="Your Name" />
-                  <Input type="email" placeholder="Your Email" />
+                  <Input name="name" placeholder="Your Name" value={formState.name} onChange={handleInputChange} required />
+                  <Input name="email" type="email" placeholder="Your Email" value={formState.email} onChange={handleInputChange} required />
                 </div>
-                <Input placeholder="Subject" />
-                <Textarea placeholder="Your Message" rows={6} />
+                <Input name="subject" placeholder="Subject" value={formState.subject} onChange={handleInputChange} required />
+                <Textarea name="message" placeholder="Your Message" rows={6} value={formState.message} onChange={handleInputChange} required />
                 <Button type="submit" size="lg" className="w-full">Send Message</Button>
               </form>
             </CardContent>
