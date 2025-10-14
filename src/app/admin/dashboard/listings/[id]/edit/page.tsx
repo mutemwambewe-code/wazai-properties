@@ -25,6 +25,7 @@ export default function EditPropertyPage() {
 
   const [property, setProperty] = useState<Property | null>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [amenitiesInput, setAmenitiesInput] = useState('');
 
   const updateAndSaveProperty = useCallback((updatedProperty: Property) => {
     setProperty(updatedProperty);
@@ -41,6 +42,7 @@ export default function EditPropertyPage() {
       if (prop) {
         setProperty(prop);
         setImagePreviews(prop.images.map(img => img.url));
+        setAmenitiesInput(prop.amenities.join(', '));
       } else {
         toast({
             variant: "destructive",
@@ -86,6 +88,26 @@ export default function EditPropertyPage() {
         }
     });
   }
+
+  const handleAmenitiesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!property) return;
+    const newAmenitiesInput = e.target.value;
+    setAmenitiesInput(newAmenitiesInput);
+    const amenities = newAmenitiesInput.split(',').map(a => a.trim()).filter(Boolean);
+    updateAndSaveProperty({ ...property, amenities });
+  }
+
+  const handleCoordinatesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!property) return;
+    const { name, value } = e.target;
+    updateAndSaveProperty({
+        ...property,
+        coordinates: {
+            ...property.coordinates,
+            [name]: Number(value),
+        }
+    });
+  }
   
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && property) {
@@ -127,8 +149,6 @@ export default function EditPropertyPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!property) return;
-
-    // Data is already saved by updateAndSaveProperty on each change
     
     toast({
         title: "Property Updated",
@@ -207,6 +227,22 @@ export default function EditPropertyPage() {
           <div className="space-y-2">
             <Label htmlFor="location">Location</Label>
             <Input id="location" name="location" value={property.location} onChange={handleInputChange} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="amenities">Amenities (comma-separated)</Label>
+            <Input id="amenities" value={amenitiesInput} onChange={handleAmenitiesChange} placeholder="e.g. Swimming pool, Gym, Wi-Fi" />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+                <Label htmlFor="lat">Latitude</Label>
+                <Input id="lat" name="lat" type="number" value={property.coordinates.lat} onChange={handleCoordinatesChange} placeholder="e.g. -15.4167" />
+            </div>
+            <div className="space-y-2">
+                <Label htmlFor="lng">Longitude</Label>
+                <Input id="lng" name="lng" type="number" value={property.coordinates.lng} onChange={handleCoordinatesChange} placeholder="e.g. 28.2833" />
+            </div>
           </div>
 
           <div className="space-y-2">
