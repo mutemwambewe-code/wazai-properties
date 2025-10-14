@@ -4,12 +4,14 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { properties as initialProperties } from "@/lib/data";
+import { properties as initialProperties, getPropertyByIdFromStorage, savePropertiesToStorage } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, PlusCircle, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import type { Property } from "@/lib/types";
+import Link from "next/link";
+import { Pencil } from "lucide-react";
 
 const formatPrice = (price: Property['price']) => {
     return new Intl.NumberFormat('en-US', {
@@ -19,19 +21,17 @@ const formatPrice = (price: Property['price']) => {
     }).format(price.amount);
 };
 
-const LOCAL_STORAGE_KEY = 'properties';
-
 export default function ListingsManagementPage() {
     const [properties, setProperties] = useState<Property[]>([]);
     const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
 
     useEffect(() => {
-        const storedProperties = localStorage.getItem(LOCAL_STORAGE_KEY);
+        const storedProperties = localStorage.getItem('properties');
         if (storedProperties) {
             setProperties(JSON.parse(storedProperties));
         } else {
             setProperties(initialProperties);
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialProperties));
+            savePropertiesToStorage(initialProperties);
         }
     }, []);
 
@@ -39,7 +39,7 @@ export default function ListingsManagementPage() {
         if (propertyToDelete) {
             const updatedProperties = properties.filter(p => p.id !== propertyToDelete.id);
             setProperties(updatedProperties);
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedProperties));
+            savePropertiesToStorage(updatedProperties);
             setPropertyToDelete(null);
         }
     };
@@ -53,7 +53,7 @@ export default function ListingsManagementPage() {
                         <CardDescription>Manage your property listings.</CardDescription>
                     </div>
                     <Button asChild size="sm" className="ml-auto gap-1">
-                        <a href="#"><PlusCircle className="h-3.5 w-3.5" /><span>Add Property</span></a>
+                        <Link href="/admin/dashboard/listings/new"><PlusCircle className="h-3.5 w-3.5" /><span>Add Property</span></Link>
                     </Button>
                 </CardHeader>
                 <CardContent>
@@ -84,7 +84,12 @@ export default function ListingsManagementPage() {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem>Edit</DropdownMenuItem>
+                                                <DropdownMenuItem asChild>
+                                                    <Link href={`/admin/dashboard/listings/${prop.id}/edit`}>
+                                                        <Pencil className="mr-2 h-4 w-4" />
+                                                        Edit
+                                                    </Link>
+                                                </DropdownMenuItem>
                                                 <DropdownMenuItem className="text-destructive" onClick={() => setPropertyToDelete(prop)}>
                                                     <Trash2 className="mr-2 h-4 w-4" />
                                                     Delete

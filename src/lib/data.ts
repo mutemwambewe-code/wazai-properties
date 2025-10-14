@@ -120,3 +120,24 @@ export const testimonials: Testimonial[] = [
 export const getPropertyById = (id: string): Property | undefined => {
   return properties.find(p => p.id === id);
 }
+
+export const savePropertiesToStorage = (properties: Property[]) => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('properties', JSON.stringify(properties));
+    }
+}
+
+export const getPropertiesFromStorage = (): Property[] => {
+    if (typeof window !== 'undefined') {
+        const storedProperties = localStorage.getItem('properties');
+        if (storedProperties) {
+            return JSON.parse(storedProperties);
+        }
+    }
+    return properties;
+}
+
+export const getPropertyByIdFromStorage = (id: string): Property | undefined => {
+    const allProperties = getPropertiesFromStorage();
+    return allProperties.find(p => p.id === id);
+}
