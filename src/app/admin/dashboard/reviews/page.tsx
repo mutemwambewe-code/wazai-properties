@@ -71,7 +71,7 @@ export default function ReviewsManagementPage() {
                 id: `avatar-${Date.now()}`,
                 url: `https://picsum.photos/seed/${Date.now()}/100/100`,
                 description: `Avatar of ${newReview.name}`,
-                hint: 'person portrait',
+                hint: 'abstract pattern',
             }
         };
 
