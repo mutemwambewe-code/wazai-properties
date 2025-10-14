@@ -161,14 +161,14 @@ export default function PropertyDetailsPage() {
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     {isCommercial ? (
                         <>
-                            <div className="flex items-center"><Milestone className="w-4 h-4 mr-2"/> Size: {property.size.value} {property.size.unit}</div>
+                            {property.size && <div className="flex items-center"><Milestone className="w-4 h-4 mr-2"/> Size: {property.size.value} {property.size.unit}</div>}
                             {property.zoning && <div className="flex items-center"><Building className="w-4 h-4 mr-2"/> Zoning: {property.zoning}</div>}
                         </>
                     ) : (
                         <>
                            {property.bedrooms && <div className="flex items-center"><Bed className="w-4 h-4 mr-2"/> {property.bedrooms} Beds</div>}
                            {property.bathrooms && <div className="flex items-center"><Bath className="w-4 h-4 mr-2"/> {property.bathrooms} Baths</div>}
-                            <div className="flex items-center"><Milestone className="w-4 h-4 mr-2"/> Size: {property.size.value} {property.size.unit}</div>
+                           {property.size && <div className="flex items-center"><Milestone className="w-4 h-4 mr-2"/> Size: {property.size.value} {property.size.unit}</div>}
                         </>
                     )}
                 </div>

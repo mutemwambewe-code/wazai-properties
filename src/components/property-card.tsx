@@ -85,7 +85,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
                   {property.bathrooms}
                 </span>
               </>
-            ) : isLand ? (
+            ) : (property.size) && (isLand ? (
               <span className="flex items-center" title={`${property.size.value} ${property.size.unit}`}>
                   <LandPlot className="w-4 h-4 mr-2 text-primary" />
                   {property.size.value} {property.size.unit}
@@ -100,7 +100,7 @@ export function PropertyCard({ property, className }: PropertyCardProps) {
                 <Milestone className="w-4 h-4 mr-2 text-primary" />
                 {property.size.value} {property.size.unit}
               </span>
-            )}
+            ))}
           </div>
           <p className="text-xl font-bold text-primary">
             {formatPrice(property.price)}
