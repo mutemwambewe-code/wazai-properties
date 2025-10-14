@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -20,7 +21,7 @@ export function Header() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Building2 className="h-6 w-6 text-primary" />
             <span className="font-bold font-headline sm:inline-block">
-              Zambia Homes & Investments
+              WazaiProperties
             </span>
           </Link>
           <nav className="hidden gap-6 text-sm md:flex">
@@ -42,7 +43,7 @@ export function Header() {
             <SheetContent side="left">
               <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
                 <Building2 className="h-6 w-6 text-primary" />
-                <span className="font-bold font-headline">ZHI</span>
+                <span className="font-bold font-headline">WazaiProperties</span>
               </Link>
               <nav className="flex flex-col gap-4 text-lg">
                 <NavLinks />

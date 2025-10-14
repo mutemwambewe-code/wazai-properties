@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Building, Star } from "lucide-react";
 import Link from "next/link";
@@ -41,7 +42,7 @@ export default function DashboardHomePage() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <p>This is your central hub for overseeing all aspects of the Zambia Homes & Investments website.</p>
+                <p>This is your central hub for overseeing all aspects of the WazaiProperties website.</p>
             </CardContent>
         </Card>
       </div>

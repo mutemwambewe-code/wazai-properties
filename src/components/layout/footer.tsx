@@ -23,11 +23,11 @@ export function Footer() {
             <Link href="/" className="flex items-center space-x-2">
               <Building2 className="h-8 w-8 text-primary" />
               <span className="text-xl font-bold font-headline">
-                Zambia Homes & Investments
+                WazaiProperties
               </span>
             </Link>
             <p className="text-muted-foreground text-sm">
-              Invest. Build. Live. Find your ideal property in Zambia.
+              Your trusted partner for Zambian real estate.
             </p>
           </div>
           <div className="md:col-start-2">
@@ -70,7 +70,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 border-t border-border/40 pt-4 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Zambia Homes & Investments. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} WazaiProperties. All rights reserved.</p>
         </div>
       </div>
     </footer>

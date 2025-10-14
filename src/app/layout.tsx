@@ -1,11 +1,12 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Zambia Homes & Investments',
-  description: 'Invest. Build. Live. — Find Your Ideal Property in Zambia.',
+  title: 'WazaiProperties',
+  description: 'Your trusted partner for Zambian real estate.',
 };
 
 export default function RootLayout({

@@ -1,3 +1,4 @@
+
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Building2 } from 'lucide-react';
 import { AdminSidebarNav } from "@/components/layout/admin-sidebar-nav";
@@ -18,7 +19,7 @@ export default function DashboardLayout({
             <Button variant="ghost" size="icon" className="shrink-0" asChild>
                 <Link href="/"><Building2 /></Link>
             </Button>
-            <span className="font-headline text-lg font-semibold overflow-hidden whitespace-nowrap">ZHI Admin</span>
+            <span className="font-headline text-lg font-semibold overflow-hidden whitespace-nowrap">WazaiProperties Admin</span>
           </div>
         </SidebarHeader>
         <SidebarContent className="flex flex-col">
