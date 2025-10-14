@@ -1,157 +1,30 @@
 
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
 import { Star } from 'lucide-react';
-import type { Testimonial } from '@/lib/types';
-import { cn } from '@/lib/utils';
-import { testimonials as initialTestimonials } from '@/lib/data';
 
-const LOCAL_STORAGE_KEY = 'testimonials';
-
-const getTestimonialsFromStorage = (): Testimonial[] => {
-    if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
-        try {
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                if(Array.isArray(parsed)) return parsed;
-            }
-        } catch (e) {
-            console.error("Failed to parse testimonials from localStorage", e);
-        }
-    }
-    return initialTestimonials;
-};
-
+const googleMapsReviewUrl = "https://www.google.com/maps/place/WAZAI+PROPERTIES/@-15.3504193,28.3675728,17z/data=!4m15!1m8!3m7!1s0x19408bb601655ba5:0x8c4e89277695a69d!2sWAZAI+PROPERTIES!8m2!3d-15.3503711!4d28.3676026!10e1!16s%2Fg%2F11sssc47_7!3m5!1s0x19408bb601655ba5:0x8c4e89277695a69d!8m2!3d-15.3503711!4d28.3676026!16s%2Fg%2F11sssc47_7?authuser=0&entry=ttu&g_ep=EgoyMDI1MTAwOC4wIKXMDSoASAFQAw%3D%3D";
 
 export function LeaveReview() {
-  const [name, setName] = useState('');
-  const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const { toast } = useToast();
-
-  const handleReviewSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!name || !comment || rating === 0) {
-      toast({
-        variant: 'destructive',
-        title: 'Incomplete Review',
-        description: 'Please fill in all fields and provide a rating.',
-      });
-      return;
-    }
-
-    const newReview: Testimonial = {
-      id: `test-${Date.now()}`,
-      name,
-      rating,
-      comment,
-      avatarImage: {
-        id: `avatar-${Date.now()}`,
-        url: `https://picsum.photos/seed/${Date.now()}/100/100`,
-        description: `Avatar of ${name}`,
-        hint: 'person portrait',
-      },
-    };
-
-    try {
-        const existingReviews = getTestimonialsFromStorage();
-        const updatedReviews = [...existingReviews, newReview];
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedReviews));
-
-        // Manually dispatch a storage event so the Testimonials component updates
-        window.dispatchEvent(new StorageEvent('storage', {
-            key: LOCAL_STORAGE_KEY,
-            newValue: JSON.stringify(updatedReviews),
-        }));
-
-        toast({
-            title: 'Review Submitted!',
-            description: 'Thank you for your feedback.',
-        });
-
-        // Reset form
-        setName('');
-        setComment('');
-        setRating(0);
-    } catch (error) {
-        console.error("Failed to save review:", error);
-        toast({
-            variant: "destructive",
-            title: "Uh oh! Something went wrong.",
-            description: "Could not save your review.",
-        });
-    }
-  };
-
   return (
     <section id="leave-review" className="py-16 sm:py-24">
       <div className="container mx-auto px-4">
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader className="text-center">
+        <Card className="max-w-2xl mx-auto text-center">
+          <CardHeader>
             <CardTitle className="text-3xl md:text-4xl font-headline font-bold">Leave a Review</CardTitle>
             <CardDescription className="mt-2 text-lg text-muted-foreground">
-              Share your experience with us.
+              Your feedback helps us improve. Share your experience on Google!
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleReviewSubmit} className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Your Name</Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Jane Doe"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Your Rating</Label>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => {
-                    const starValue = i + 1;
-                    return (
-                      <Star
-                        key={starValue}
-                        className={cn(
-                          'w-8 h-8 cursor-pointer transition-colors',
-                          starValue <= (hoverRating || rating)
-                            ? 'text-primary fill-primary'
-                            : 'text-muted-foreground/30'
-                        )}
-                        onClick={() => setRating(starValue)}
-                        onMouseEnter={() => setHoverRating(starValue)}
-                        onMouseLeave={() => setHoverRating(0)}
-                      />
-                    );
-                  })}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="comment">Your Review</Label>
-                <Textarea
-                  id="comment"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  placeholder="Tell us about your experience..."
-                  rows={5}
-                  required
-                />
-              </div>
-              <Button type="submit" size="lg" className="w-full">
-                Submit Review
-              </Button>
-            </form>
+            <Button asChild size="lg">
+              <a href={googleMapsReviewUrl} target="_blank" rel="noopener noreferrer">
+                <Star className="mr-2 h-5 w-5" />
+                Review us on Google Maps
+              </a>
+            </Button>
           </CardContent>
         </Card>
       </div>
