@@ -31,9 +31,6 @@ export default function NewPropertyPage() {
     status: 'For Sale',
     price: { amount: 0, currency: 'USD' },
     location: '',
-    size: { value: 0, unit: 'sqm' },
-    bedrooms: 0,
-    bathrooms: 0,
     description: '',
     amenities: [],
     images: [],
@@ -44,6 +41,8 @@ export default function NewPropertyPage() {
   const [sizeUnit, setSizeUnit] = useState<PropertySizeUnit>('sqm');
   const [amenitiesInput, setAmenitiesInput] = useState('');
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [bedrooms, setBedrooms] = useState<number | ''>('');
+  const [bathrooms, setBathrooms] = useState<number | ''>('');
 
   useEffect(() => {
     setProperty(prev => ({ ...prev, price: { ...prev.price, amount: 0 } as Property['price'] }));
@@ -109,7 +108,7 @@ export default function NewPropertyPage() {
   };
 
   const convertSize = (value: number, from: PropertySizeUnit, to: PropertySizeUnit): number => {
-    if (from === to) return value;
+    if (from === to || !value) return value || 0;
     
     let valueInSqm: number;
     switch(from) {
@@ -182,6 +181,8 @@ export default function NewPropertyPage() {
     const newProperty: Property = {
         id: `prop-${Date.now()}`,
         ...property,
+        bedrooms: typeof bedrooms === 'number' ? bedrooms : 0,
+        bathrooms: typeof bathrooms === 'number' ? bathrooms : 0,
         amenities: amenitiesInput.split(',').map(a => a.trim()).filter(Boolean),
         images: (property.images?.length ? property.images : [{ id: 'default', url: `https://picsum.photos/seed/${Date.now()}/600/400`, description: 'Newly added property', hint: 'building exterior' }]),
         agent: { name: 'Admin User', phone: '+260977123456', email: 'info@zambia.homes' },
@@ -299,11 +300,11 @@ export default function NewPropertyPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                     <Label htmlFor="bedrooms">Bedrooms</Label>
-                    <Input id="bedrooms" name="bedrooms" type="number" value={property.bedrooms} onChange={(e) => setProperty({...property, bedrooms: Number(e.target.value)})} />
+                    <Input id="bedrooms" name="bedrooms" type="number" value={bedrooms} onChange={(e) => setBedrooms(e.target.value === '' ? '' : Number(e.target.value))} placeholder="e.g. 4" />
                 </div>
                 <div className="space-y-2">
                     <Label htmlFor="bathrooms">Bathrooms</Label>
-                    <Input id="bathrooms" name="bathrooms" type="number" value={property.bathrooms} onChange={(e) => setProperty({...property, bathrooms: Number(e.target.value)})} />
+                    <Input id="bathrooms" name="bathrooms" type="number" value={bathrooms} onChange={(e) => setBathrooms(e.target.value === '' ? '' : Number(e.target.value))} placeholder="e.g. 5" />
                 </div>
             </div>
           )}
@@ -365,3 +366,5 @@ export default function NewPropertyPage() {
     </Card>
   );
 }
+
+    
