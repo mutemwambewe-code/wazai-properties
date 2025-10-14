@@ -37,7 +37,7 @@ export default function PropertyDetailsPage({ params }: { params: { id: string }
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow py-8 sm:py-12">
-        <div className="container">
+        <div className="container mx-auto px-4">
           <div className="mb-6">
             <h1 className="font-headline text-3xl md:text-4xl font-bold">{property.title}</h1>
             <p className="flex items-center text-muted-foreground mt-2">

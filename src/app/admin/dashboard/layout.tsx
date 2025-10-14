@@ -39,7 +39,9 @@ export default function DashboardLayout({
             </div>
         </header>
         <main className="flex-1 p-4 sm:p-6">
-            {children}
+            <div className="mx-auto max-w-screen-2xl">
+                {children}
+            </div>
         </main>
       </SidebarInset>
     </SidebarProvider>

@@ -13,7 +13,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container py-12 md:py-16">
+      <main className="flex-grow container mx-auto px-4 py-12 md:py-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-headline font-bold">Contact Us</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -21,7 +21,7 @@ export default function ContactPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           <Card>
             <CardHeader>
               <CardTitle className="font-headline text-2xl">Send us a Message</CardTitle>
@@ -68,7 +68,7 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="mt-16">
+        <div className="mt-16 max-w-6xl mx-auto">
             <h2 className="text-3xl font-headline font-bold text-center mb-8">Our Office Location</h2>
             <MapPlaceholder />
         </div>

@@ -12,7 +12,7 @@ export default function ListingsPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow container py-8">
+      <main className="flex-grow container mx-auto px-4 py-8">
         <div className="mb-8 p-6 bg-card rounded-lg shadow-md">
             <h1 className="text-3xl font-headline font-bold mb-4">All Properties</h1>
             {/* A simplified search bar for the listings page */}
