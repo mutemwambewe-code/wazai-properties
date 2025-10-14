@@ -48,9 +48,12 @@ export default function ListingsPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-8 p-6 bg-card rounded-lg shadow-md">
-            <h1 className="text-3xl font-headline font-bold mb-4">All Properties</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <div className="mb-8 p-6 bg-card rounded-lg shadow-md text-center">
+            <h1 className="text-3xl md:text-4xl font-headline font-bold mb-2">Find Your Dream Property or Investment</h1>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+                Whether you&apos;re looking for a new home or your next big investment, your journey starts here. Use the filters below to begin.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end max-w-4xl mx-auto">
                 <Input 
                   placeholder="Search listings..." 
                   className="lg:col-span-2 h-12"
@@ -67,17 +70,21 @@ export default function ListingsPage() {
                         <SelectItem value="mine">Mine</SelectItem>
                     </SelectContent>
                 </Select>
-                {/* Search button could trigger filtering, but here it's live-updating */}
-                <Button className="h-12 w-full" disabled>
+                <Button className="h-12 w-full">
                   <Search className="mr-2 h-4 w-4"/> Search
                 </Button>
             </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProperties.map(property => (
+          {filteredProperties.length > 0 ? filteredProperties.map(property => (
             <PropertyCard key={property.id} property={property} />
-          ))}
+          )) : (
+            <div className="col-span-full text-center py-16">
+                <h3 className="text-2xl font-semibold">No Properties Found</h3>
+                <p className="text-muted-foreground mt-2">Try adjusting your search filters to find what you&apos;re looking for.</p>
+            </div>
+          )}
         </div>
       </main>
       <Footer />
