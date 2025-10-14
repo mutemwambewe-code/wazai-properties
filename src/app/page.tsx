@@ -10,8 +10,10 @@ export default function Home() {
       <Header />
       <main className="flex-grow">
         <Hero />
-        <FeaturedProperties />
-        <Testimonials />
+        <div className="container mx-auto px-4">
+          <FeaturedProperties />
+          <Testimonials />
+        </div>
       </main>
       <Footer />
     </div>

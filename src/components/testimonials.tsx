@@ -18,7 +18,7 @@ const StarRating = ({ rating }: { rating: number }) => (
 export function Testimonials() {
   return (
     <section id="testimonials" className="py-16 sm:py-24 bg-background">
-      <div className="container">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-headline font-bold">What Our Clients Say</h2>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
