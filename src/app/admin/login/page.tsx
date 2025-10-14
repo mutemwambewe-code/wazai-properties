@@ -11,7 +11,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/firebase';
 import {
-  createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { useToast } from '@/hooks/use-toast';
@@ -22,22 +21,12 @@ export default function AdminLoginPage() {
   const { toast } = useToast();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isSigningUp, setIsSigningUp] = useState(false);
 
   const handleAuthAction = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      if (isSigningUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-        toast({
-          title: 'Account Created',
-          description: 'You have successfully signed up. Please log in.',
-        });
-        setIsSigningUp(false); // Switch to login view after signup
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-        router.push('/admin/dashboard');
-      }
+      await signInWithEmailAndPassword(auth, email, password);
+      router.push('/admin/dashboard');
     } catch (error: any) {
       toast({
         variant: 'destructive',
@@ -56,7 +45,7 @@ export default function AdminLoginPage() {
               <Building2 className="h-10 w-10 text-primary" />
             </Link>
           </div>
-          <CardTitle className="text-2xl font-headline">{isSigningUp ? 'Create Admin Account' : 'Admin Login'}</CardTitle>
+          <CardTitle className="text-2xl font-headline">Admin Login</CardTitle>
           <CardDescription>
             Enter your credentials to access the dashboard
           </CardDescription>
@@ -87,26 +76,9 @@ export default function AdminLoginPage() {
               />
             </div>
             <Button type="submit" className="w-full mt-2">
-              {isSigningUp ? 'Sign Up' : 'Login'}
+              Login
             </Button>
           </form>
-          <div className="mt-4 text-center text-sm">
-            {isSigningUp ? (
-              <>
-                Already have an account?{' '}
-                <Button variant="link" className="p-0 h-auto" onClick={() => setIsSigningUp(false)}>
-                  Login
-                </Button>
-              </>
-            ) : (
-              <>
-                Don&apos;t have an account?{' '}
-                <Button variant="link" className="p-0 h-auto" onClick={() => setIsSigningUp(true)}>
-                  Sign up
-                </Button>
-              </>
-            )}
-          </div>
         </CardContent>
       </Card>
     </div>
