@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -12,8 +13,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Trash2, Upload } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -22,14 +24,15 @@ export default function EditPropertyPage() {
   const { id } = params;
 
   const [property, setProperty] = useState<Property | null>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
   useEffect(() => {
     if (typeof id === 'string') {
       const prop = getPropertyByIdFromStorage(id);
       if (prop) {
         setProperty(prop);
+        setImagePreviews(prop.images.map(img => img.url));
       } else {
-        // Handle case where property is not found
         toast({
             variant: "destructive",
             title: "Property not found",
@@ -74,6 +77,45 @@ export default function EditPropertyPage() {
         }
     });
   }
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && property) {
+      const files = Array.from(e.target.files);
+      const currentImages = [...(property.images || [])];
+      const currentPreviews = [...imagePreviews];
+
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const dataUrl = reader.result as string;
+          currentImages.push({
+            id: `img-${Date.now()}-${Math.random()}`,
+            url: dataUrl,
+            description: file.name,
+            hint: 'uploaded image'
+          });
+          currentPreviews.push(dataUrl);
+
+          if (currentImages.length === (property.images?.length || 0) + files.length) {
+            setProperty({ ...property, images: currentImages });
+            setImagePreviews(currentPreviews);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+  };
+
+  const removeImage = (index: number) => {
+    if (!property) return;
+
+    const updatedImages = property.images?.filter((_, i) => i !== index);
+    const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
+
+    setProperty({ ...property, images: updatedImages });
+    setImagePreviews(updatedPreviews);
+  };
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -167,6 +209,36 @@ export default function EditPropertyPage() {
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
             <Textarea id="description" name="description" value={property.description} onChange={handleInputChange} rows={5} />
+          </div>
+
+          <div className="space-y-4">
+            <Label>Images</Label>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {imagePreviews.map((src, index) => (
+                    <div key={index} className="relative group aspect-video">
+                        <Image src={src} alt={`Preview ${index + 1}`} fill className="object-cover rounded-md" />
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => removeImage(index)}
+                        >
+                            <Trash2 className="h-4 w-4" />
+                        </Button>
+                    </div>
+                ))}
+                <Label htmlFor="image-upload" className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted">
+                    <div className="flex flex-col items-center justify-center pt-5 pb-6 text-muted-foreground">
+                        <Upload className="w-8 h-8 mb-2" />
+                        <p className="mb-2 text-sm text-center">Click to upload or drag & drop</p>
+                    </div>
+                    <Input id="image-upload" type="file" multiple className="hidden" onChange={handleImageChange} accept="image/*" />
+                </Label>
+            </div>
+            {imagePreviews.length === 0 && (
+              <p className="text-sm text-muted-foreground">No images uploaded. A default placeholder will be used if you save without images.</p>
+            )}
           </div>
 
           <div className="flex justify-end gap-2">
