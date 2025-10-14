@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,13 +19,27 @@ const formatPrice = (price: Property['price']) => {
     }).format(price.amount);
 };
 
+const LOCAL_STORAGE_KEY = 'properties';
+
 export default function ListingsManagementPage() {
-    const [properties, setProperties] = useState<Property[]>(initialProperties);
+    const [properties, setProperties] = useState<Property[]>([]);
     const [propertyToDelete, setPropertyToDelete] = useState<Property | null>(null);
+
+    useEffect(() => {
+        const storedProperties = localStorage.getItem(LOCAL_STORAGE_KEY);
+        if (storedProperties) {
+            setProperties(JSON.parse(storedProperties));
+        } else {
+            setProperties(initialProperties);
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(initialProperties));
+        }
+    }, []);
 
     const handleDelete = () => {
         if (propertyToDelete) {
-            setProperties(properties.filter(p => p.id !== propertyToDelete.id));
+            const updatedProperties = properties.filter(p => p.id !== propertyToDelete.id);
+            setProperties(updatedProperties);
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedProperties));
             setPropertyToDelete(null);
         }
     };
