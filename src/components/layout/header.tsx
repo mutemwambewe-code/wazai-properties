@@ -21,7 +21,7 @@ export function Header() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Building2 className="h-6 w-6 text-primary" />
             <span className="font-bold font-headline sm:inline-block">
-              WazaiProperties
+              Wazai Properties
             </span>
           </Link>
           <nav className="hidden gap-6 text-sm md:flex">
@@ -43,7 +43,7 @@ export function Header() {
             <SheetContent side="left">
               <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
                 <Building2 className="h-6 w-6 text-primary" />
-                <span className="font-bold font-headline">WazaiProperties</span>
+                <span className="font-bold font-headline">Wazai Properties</span>
               </Link>
               <nav className="flex flex-col gap-4 text-lg">
                 <NavLinks />

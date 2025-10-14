@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'WazaiProperties',
+  title: 'Wazai Properties',
   description: 'Your trusted partner for Zambian real estate.',
 };
 

@@ -42,7 +42,7 @@ export default function DashboardHomePage() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <p>This is your central hub for overseeing all aspects of the WazaiProperties website.</p>
+                <p>This is your central hub for overseeing all aspects of the Wazai Properties website.</p>
             </CardContent>
         </Card>
       </div>
