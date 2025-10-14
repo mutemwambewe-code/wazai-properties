@@ -11,8 +11,25 @@ import { useToast } from '@/hooks/use-toast';
 import { Star } from 'lucide-react';
 import type { Testimonial } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { testimonials as initialTestimonials } from '@/lib/data';
 
 const LOCAL_STORAGE_KEY = 'testimonials';
+
+const getTestimonialsFromStorage = (): Testimonial[] => {
+    if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+        try {
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if(Array.isArray(parsed)) return parsed;
+            }
+        } catch (e) {
+            console.error("Failed to parse testimonials from localStorage", e);
+        }
+    }
+    return initialTestimonials;
+};
+
 
 export function LeaveReview() {
   const [name, setName] = useState('');
@@ -47,10 +64,15 @@ export function LeaveReview() {
     };
 
     try {
-        const storedReviews = localStorage.getItem(LOCAL_STORAGE_KEY);
-        const existingReviews: Testimonial[] = storedReviews ? JSON.parse(storedReviews) : [];
+        const existingReviews = getTestimonialsFromStorage();
         const updatedReviews = [...existingReviews, newReview];
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedReviews));
+
+        // Manually dispatch a storage event so the Testimonials component updates
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: LOCAL_STORAGE_KEY,
+            newValue: JSON.stringify(updatedReviews),
+        }));
 
         toast({
             title: 'Review Submitted!',

@@ -23,8 +23,15 @@ const StarRating = ({ rating }: { rating: number }) => (
 const getTestimonialsFromStorage = (): Testimonial[] => {
     if (typeof window !== 'undefined') {
         const stored = localStorage.getItem('testimonials');
-        if (stored) {
-            return JSON.parse(stored);
+        try {
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
+            }
+        } catch (e) {
+            console.error("Failed to parse testimonials from localStorage", e);
         }
     }
     return initialTestimonials;
@@ -35,7 +42,28 @@ export function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
 
   useEffect(() => {
+    // Initial load
     setTestimonials(getTestimonialsFromStorage());
+
+    // Listen for changes in localStorage
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'testimonials' && event.newValue) {
+        try {
+          const newTestimonials = JSON.parse(event.newValue);
+          if (Array.isArray(newTestimonials)) {
+            setTestimonials(newTestimonials);
+          }
+        } catch (e) {
+            console.error("Failed to parse updated testimonials from localStorage", e);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
   }, []);
 
   return (
@@ -50,7 +78,7 @@ export function Testimonials() {
         <Carousel
           opts={{
             align: "start",
-            loop: true,
+            loop: testimonials.length > 1,
           }}
           className="w-full"
         >
