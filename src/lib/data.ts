@@ -194,3 +194,15 @@ export const getTestimonialsFromStorage = (): Testimonial[] => {
     }
     return testimonials;
 };
+
+
+export const saveTestimonialsToStorage = (testimonials: Testimonial[]) => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('testimonials', JSON.stringify(testimonials));
+        // Dispatch a storage event to notify other tabs/windows
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'testimonials',
+            newValue: JSON.stringify(testimonials),
+        }));
+    }
+};
