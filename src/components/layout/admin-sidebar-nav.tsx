@@ -23,7 +23,8 @@ export function AdminSidebarNav() {
 
   const handleLogout = async () => {
     await signOut(auth);
-    router.push('/');
+    // Use window.location.href to force a full redirect and avoid routing loops.
+    window.location.href = '/';
   };
 
   return (
