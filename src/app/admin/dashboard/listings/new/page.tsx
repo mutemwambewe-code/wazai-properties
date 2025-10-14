@@ -38,7 +38,7 @@ export default function NewPropertyPage() {
     images: [],
   });
   
-  const [sizeValue, setSizeValue] = useState(0);
+  const [sizeValue, setSizeValue] = useState<number | ''>('');
   const [sizeUnit, setSizeUnit] = useState<PropertySizeUnit>('sqm');
   const [amenitiesInput, setAmenitiesInput] = useState('');
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -64,14 +64,22 @@ export default function NewPropertyPage() {
   };
 
   const handleSizeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value) || 0;
-    setSizeValue(value);
-    updatePropertySize(value, sizeUnit);
+    const value = e.target.value;
+    if (value === '') {
+        setSizeValue('');
+        updatePropertySize(0, sizeUnit);
+    } else {
+        const numericValue = parseFloat(value);
+        if (!isNaN(numericValue)) {
+            setSizeValue(numericValue);
+            updatePropertySize(numericValue, sizeUnit);
+        }
+    }
   };
   
   const handleSizeUnitChange = (unit: PropertySizeUnit) => {
     setSizeUnit(unit);
-    updatePropertySize(sizeValue, unit);
+    updatePropertySize(typeof sizeValue === 'number' ? sizeValue : 0, unit);
   };
 
   const updatePropertySize = (value: number, unit: PropertySizeUnit) => {
@@ -252,7 +260,7 @@ export default function NewPropertyPage() {
           <div className="space-y-2">
             <Label>Size</Label>
             <div className="grid grid-cols-2 gap-4">
-              <Input type="number" value={sizeValue} onChange={handleSizeInputChange} />
+              <Input type="number" value={sizeValue} onChange={handleSizeInputChange} placeholder="Enter property size" />
               <Select value={sizeUnit} onValueChange={handleSizeUnitChange}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
