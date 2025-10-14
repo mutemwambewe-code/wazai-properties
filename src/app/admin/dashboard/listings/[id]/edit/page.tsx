@@ -2,9 +2,9 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { getPropertyByIdFromStorage, savePropertiesToStorage } from '@/lib/data';
+import { getPropertiesFromStorage, savePropertiesToStorage, getPropertyByIdFromStorage } from '@/lib/data';
 import type { Property } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -26,6 +26,15 @@ export default function EditPropertyPage() {
   const [property, setProperty] = useState<Property | null>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
+  const updateAndSaveProperty = useCallback((updatedProperty: Property) => {
+    setProperty(updatedProperty);
+    const storedProperties = getPropertiesFromStorage();
+    const updatedProperties = storedProperties.map((p: Property) => 
+        p.id === updatedProperty.id ? updatedProperty : p
+    );
+    savePropertiesToStorage(updatedProperties);
+  }, []);
+
   useEffect(() => {
     if (typeof id === 'string') {
       const prop = getPropertyByIdFromStorage(id);
@@ -46,18 +55,18 @@ export default function EditPropertyPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     if (!property) return;
     const { name, value } = e.target;
-    setProperty({ ...property, [name]: value });
+    updateAndSaveProperty({ ...property, [name]: value });
   };
   
   const handleSelectChange = (name: keyof Property, value: string) => {
     if (!property) return;
-    setProperty({ ...property, [name]: value });
+    updateAndSaveProperty({ ...property, [name]: value });
   };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!property) return;
     const { name, value } = e.target;
-    setProperty({
+    updateAndSaveProperty({
         ...property,
         price: {
             ...property.price,
@@ -69,7 +78,7 @@ export default function EditPropertyPage() {
   const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!property) return;
     const { name, value } = e.target;
-     setProperty({
+     updateAndSaveProperty({
         ...property,
         size: {
             ...property.size,
@@ -81,24 +90,22 @@ export default function EditPropertyPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && property) {
       const files = Array.from(e.target.files);
-      const currentImages = [...(property.images || [])];
-      const currentPreviews = [...imagePreviews];
-
+      
       files.forEach(file => {
         const reader = new FileReader();
         reader.onloadend = () => {
           const dataUrl = reader.result as string;
-          currentImages.push({
+          const newImage = {
             id: `img-${Date.now()}-${Math.random()}`,
             url: dataUrl,
             description: file.name,
             hint: 'uploaded image'
-          });
-          currentPreviews.push(dataUrl);
-
-          if (currentImages.length === (property.images?.length || 0) + files.length) {
-            setProperty({ ...property, images: currentImages });
-            setImagePreviews(currentPreviews);
+          };
+          
+          if (property) {
+            const updatedImages = [...property.images, newImage];
+            updateAndSaveProperty({ ...property, images: updatedImages });
+            setImagePreviews(previews => [...previews, dataUrl]);
           }
         };
         reader.readAsDataURL(file);
@@ -112,7 +119,7 @@ export default function EditPropertyPage() {
     const updatedImages = property.images?.filter((_, i) => i !== index);
     const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
 
-    setProperty({ ...property, images: updatedImages });
+    updateAndSaveProperty({ ...property, images: updatedImages });
     setImagePreviews(updatedPreviews);
   };
 
@@ -121,11 +128,7 @@ export default function EditPropertyPage() {
     e.preventDefault();
     if (!property) return;
 
-    const storedProperties = JSON.parse(localStorage.getItem('properties') || '[]');
-    const updatedProperties = storedProperties.map((p: Property) => 
-        p.id === property.id ? property : p
-    );
-    savePropertiesToStorage(updatedProperties);
+    // Data is already saved by updateAndSaveProperty on each change
     
     toast({
         title: "Property Updated",
