@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { MapPlaceholder } from "@/components/map-placeholder";
 import type { Property } from "@/lib/types";
+import jsPDF from 'jspdf';
 
 const formatPrice = (price: Property['price']) => {
   return new Intl.NumberFormat('en-US', {
@@ -40,6 +41,42 @@ export default function PropertyDetailsPage() {
         }
     }
   }, [params.id]);
+  
+  const handleDownloadBrochure = () => {
+    if (!property) return;
+
+    const doc = new jsPDF();
+    
+    doc.setFontSize(22);
+    doc.text(property.title, 14, 22);
+
+    doc.setFontSize(16);
+    doc.setTextColor(100);
+    doc.text(`Location: ${property.location}`, 14, 32);
+
+    doc.setFontSize(18);
+    doc.setTextColor(45, 63, 52);
+    doc.text(formatPrice(property.price), 14, 42);
+
+    doc.setFontSize(12);
+    doc.setTextColor(0);
+    
+    const descriptionLines = doc.splitTextToSize(property.description, 180);
+    doc.text(descriptionLines, 14, 60);
+    
+    let yPos = 60 + (descriptionLines.length * 7) + 10;
+
+    doc.setFontSize(14);
+    doc.text('Amenities:', 14, yPos);
+    yPos += 7;
+    doc.setFontSize(12);
+    property.amenities.forEach(amenity => {
+        doc.text(`- ${amenity}`, 14, yPos);
+        yPos += 7;
+    });
+
+    doc.save(`${property.title.replace(/\s+/g, '_')}_Brochure.pdf`);
+  };
 
 
   if (!property) {
@@ -144,7 +181,7 @@ export default function PropertyDetailsPage() {
                             <MessageSquare className="w-5 h-5 mr-2"/> Contact Agent
                         </a>
                     </Button>
-                    <Button variant="secondary" className="w-full h-12">
+                    <Button variant="secondary" className="w-full h-12" onClick={handleDownloadBrochure}>
                         <FileDown className="w-5 h-5 mr-2" /> Download Brochure
                     </Button>
                 </div>
