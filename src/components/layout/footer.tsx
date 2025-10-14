@@ -1,8 +1,20 @@
+
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Building2, Facebook, Linkedin, Twitter } from 'lucide-react';
 import { Button } from '../ui/button';
+import { getSiteContentFromStorage } from '@/lib/data';
+import type { SiteContent } from '@/lib/types';
 
 export function Footer() {
+  const [content, setContent] = useState<SiteContent | null>(null);
+
+  useEffect(() => {
+    setContent(getSiteContentFromStorage());
+  }, []);
+
   return (
     <footer className="w-full border-t border-border/40 bg-background/95">
       <div className="container max-w-screen-2xl py-8">
@@ -28,12 +40,19 @@ export function Footer() {
           </div>
           <div>
             <h4 className="font-semibold mb-2">Contact</h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>123 Independence Ave</li>
-              <li>Lusaka, Zambia</li>
-              <li><a href="tel:+260977123456" className="hover:text-primary">+260 977 123456</a></li>
-              <li><a href="mailto:info@zambia.homes" className="hover:text-primary">info@zambia.homes</a></li>
-            </ul>
+            {content ? (
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li>{content.contactAddress}</li>
+                <li><a href={`tel:${content.contactPhone}`} className="hover:text-primary">{content.contactPhone}</a></li>
+                <li><a href={`mailto:${content.contactEmail}`} className="hover:text-primary">{content.contactEmail}</a></li>
+              </ul>
+            ) : (
+              <div className="space-y-2">
+                <div className="h-4 bg-muted rounded w-3/4"></div>
+                <div className="h-4 bg-muted rounded w-1/2"></div>
+                <div className="h-4 bg-muted rounded w-2/3"></div>
+              </div>
+            )}
           </div>
           <div>
             <h4 className="font-semibold mb-2">Follow Us</h4>

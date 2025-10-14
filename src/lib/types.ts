@@ -1,4 +1,5 @@
 
+
 export type PropertyType = 'Commercial' | 'Residential' | 'Land' | 'Mine';
 export type PropertyStatus = 'For Sale' | 'For Rent' | 'Sold';
 export type PropertySizeUnit = 'hectares' | 'sqm' | 'acres' | 'plot';
@@ -41,4 +42,12 @@ export interface Testimonial {
   rating: number;
   comment: string;
   avatarImage: { id: string, description: string, url: string, hint: string };
+}
+
+export interface SiteContent {
+  heroHeadline: string;
+  heroSubheadline: string;
+  contactPhone: string;
+  contactEmail: string;
+  contactAddress: string;
 }

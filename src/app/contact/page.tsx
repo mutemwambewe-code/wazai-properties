@@ -1,5 +1,7 @@
+
 "use client";
 
+import { useState, useEffect } from "react";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
@@ -8,8 +10,30 @@ import { Textarea } from "@/components/ui/textarea";
 import { MapPlaceholder } from "@/components/map-placeholder";
 import { Phone, Mail, MessageSquare, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getSiteContentFromStorage } from "@/lib/data";
+import type { SiteContent } from "@/lib/types";
 
 export default function ContactPage() {
+  const [content, setContent] = useState<SiteContent | null>(null);
+
+  useEffect(() => {
+    setContent(getSiteContentFromStorage());
+  }, []);
+
+  if (!content) {
+    return (
+        <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-grow container mx-auto px-4 py-12 md:py-16">
+                <div className="text-center mb-12">
+                    <h1 className="text-4xl md:text-5xl font-headline font-bold">Loading...</h1>
+                </div>
+            </main>
+            <Footer />
+        </div>
+    )
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -47,21 +71,21 @@ export default function ContactPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center">
                   <MapPin className="h-6 w-6 mr-4 text-primary" />
-                  <span>123 Independence Ave, Lusaka, Zambia</span>
+                  <span>{content.contactAddress}</span>
                 </div>
                 <div className="flex items-center">
                   <Phone className="h-6 w-6 mr-4 text-primary" />
-                  <a href="tel:+260977123456" className="hover:underline">+260 977 123456</a>
+                  <a href={`tel:${content.contactPhone}`} className="hover:underline">{content.contactPhone}</a>
                 </div>
                 <div className="flex items-center">
                   <Mail className="h-6 w-6 mr-4 text-primary" />
-                  <a href="mailto:info@zambia.homes" className="hover:underline">info@zambia.homes</a>
+                  <a href={`mailto:${content.contactEmail}`} className="hover:underline">{content.contactEmail}</a>
                 </div>
               </CardContent>
             </Card>
             
             <Button asChild size="lg" className="w-full h-14 text-lg">
-                <a href="https://wa.me/260977123456" target="_blank" rel="noopener noreferrer">
+                <a href={`https://wa.me/${content.contactPhone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
                     <MessageSquare className="h-6 w-6 mr-3" /> Chat on WhatsApp
                 </a>
             </Button>

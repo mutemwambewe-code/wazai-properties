@@ -1,4 +1,5 @@
-import type { Property, Testimonial } from '@/lib/types';
+
+import type { Property, Testimonial, SiteContent } from '@/lib/types';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 const getImage = (id: string) => {
@@ -117,6 +118,14 @@ export const testimonials: Testimonial[] = [
   },
 ];
 
+export const defaultSiteContent: SiteContent = {
+  heroHeadline: 'Invest. Build. Live.',
+  heroSubheadline: 'Find Your Ideal Property in Zambia.',
+  contactPhone: '+260 977 123456',
+  contactEmail: 'info@zambia.homes',
+  contactAddress: '123 Independence Ave, Lusaka, Zambia',
+};
+
 export const getPropertyById = (id: string): Property | undefined => {
   return properties.find(p => p.id === id);
 }
@@ -141,3 +150,20 @@ export const getPropertyByIdFromStorage = (id: string): Property | undefined => 
     const allProperties = getPropertiesFromStorage();
     return allProperties.find(p => p.id === id);
 }
+
+
+export const getSiteContentFromStorage = (): SiteContent => {
+    if (typeof window !== 'undefined') {
+        const storedContent = localStorage.getItem('siteContent');
+        if (storedContent) {
+            return JSON.parse(storedContent);
+        }
+    }
+    return defaultSiteContent;
+};
+
+export const saveSiteContentToStorage = (content: SiteContent) => {
+    if (typeof window !== 'undefined') {
+        localStorage.setItem('siteContent', JSON.stringify(content));
+    }
+};
