@@ -35,6 +35,7 @@ export default function NewPropertyPage() {
     amenities: [],
     images: [],
     zoning: '',
+    investmentPotential: '',
   });
   
   const [sizeValue, setSizeValue] = useState<number | ''>('');
@@ -313,7 +314,14 @@ export default function NewPropertyPage() {
           {(property.type === 'Commercial' || property.type === 'Land' || property.type === 'Mine') && (
             <div className="space-y-2">
                 <Label htmlFor="zoning">Zoning</Label>
-                <Input id="zoning" name="zoning" value={property.zoning || ''} onChange={handleInputChange} />
+                <Input id="zoning" name="zoning" value={property.zoning || ''} onChange={handleInputChange} placeholder="e.g. Mixed-Use, Industrial"/>
+            </div>
+          )}
+          
+          {property.type === 'Commercial' && (
+            <div className="space-y-2">
+                <Label htmlFor="investmentPotential">Investment Potential</Label>
+                <Textarea id="investmentPotential" name="investmentPotential" value={property.investmentPotential || ''} onChange={handleInputChange} placeholder="Describe the investment potential..." />
             </div>
           )}
 
