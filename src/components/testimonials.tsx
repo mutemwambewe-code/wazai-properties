@@ -2,7 +2,7 @@
 'use client';
 
 import Image from "next/image";
-import { testimonials as initialTestimonials } from "@/lib/data";
+import { testimonials as initialTestimonials, getTestimonialsFromStorage } from "@/lib/data";
 import { Card, CardContent } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Star } from "lucide-react";
@@ -19,24 +19,6 @@ const StarRating = ({ rating }: { rating: number }) => (
     ))}
   </div>
 );
-
-const getTestimonialsFromStorage = (): Testimonial[] => {
-    if (typeof window !== 'undefined') {
-        const stored = localStorage.getItem('testimonials');
-        try {
-            if (stored) {
-                const parsed = JSON.parse(stored);
-                if (Array.isArray(parsed)) {
-                    return parsed;
-                }
-            }
-        } catch (e) {
-            console.error("Failed to parse testimonials from localStorage", e);
-        }
-    }
-    return initialTestimonials;
-};
-
 
 export function Testimonials() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);

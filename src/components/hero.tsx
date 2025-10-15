@@ -5,28 +5,16 @@ import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { PropertySearchForm } from "@/components/property-search-form";
 import { useState, useEffect } from "react";
-import { getSiteContentFromStorage } from "@/lib/data";
+import { getSiteContentFromStorage, defaultSiteContent } from "@/lib/data";
 import type { SiteContent } from "@/lib/types";
 
 export function Hero() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner');
-  const [content, setContent] = useState<SiteContent | null>(null);
+  const [content, setContent] = useState<SiteContent>(defaultSiteContent);
 
   useEffect(() => {
     setContent(getSiteContentFromStorage());
   }, []);
-
-  if (!content) {
-    return (
-        <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-white bg-black/60">
-            <div className="relative z-10 container mx-auto px-4 text-center">
-                <h1 className="text-4xl md:text-6xl font-headline font-bold mb-4 drop-shadow-lg">
-                    Loading...
-                </h1>
-            </div>
-        </section>
-    );
-  }
 
   return (
     <section className="relative w-full h-[60vh] md:h-[70vh] flex items-center justify-center text-white">

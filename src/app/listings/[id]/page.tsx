@@ -81,7 +81,17 @@ export default function PropertyDetailsPage() {
 
   if (!property) {
     // You can return a loading spinner here
-    return <div>Loading...</div>;
+    return (
+        <div className="flex flex-col min-h-screen">
+          <Header />
+           <main className="flex-grow py-8 sm:py-12">
+                <div className="container mx-auto px-4 text-center">
+                    <p>Loading property details...</p>
+                </div>
+            </main>
+          <Footer />
+        </div>
+    );
   }
 
   const isCommercial = property.type === 'Commercial';
