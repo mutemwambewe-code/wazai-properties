@@ -1,21 +1,13 @@
-# Settings to manage and configure a Firebase App Hosting backend.
-# https://firebase.google.com/docs/app-hosting/configure
+appHosting:
+  runConfig:
+    maxInstances: 1
 
-runConfig:
-  # Increase this value if you'd like to automatically spin up
-  # more instances in response to increased traffic.
-  maxInstances: 1
-# Serve all static assets from the Next.js app's .next/static directory
-staticAssets:
-  - path: /.next/static/**
-    # Set a long cache duration for static assets
-    # https://firebase.google.com/docs/app-hosting/configure#cache-control
-    headers:
-      - key: 'Cache-Control'
-        value: 'public, max-age=31536000, immutable'
-# Serve all other requests to the Next.js app
-rewrites:
-  - source: /**
-    # Let the Next.js app handle the request
-    # https://firebase.google.com/docs/app-hosting/configure#server-side-rendering-ssr
-    ssr: true
+  staticAssets:
+    - path: .next/static/**
+      headers:
+        - key: Cache-Control
+          value: public, max-age=31536000, immutable
+
+  rewrites:
+    - source: /**
+      ssr: true
