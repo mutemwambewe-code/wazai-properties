@@ -8,6 +8,7 @@ import { FirebaseClientProvider } from '@/firebase';
 export const metadata: Metadata = {
   title: 'Wazai Properties',
   description: 'Your trusted partner for Zambian real estate.',
+  icons: [{ rel: 'icon', url: '/favicon.svg' }],
 };
 
 export default function RootLayout({
