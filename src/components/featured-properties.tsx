@@ -17,10 +17,10 @@ export function FeaturedProperties() {
     setProperties(getPropertiesFromStorage());
   }, []);
 
-  const featuredResidential = properties.filter(p => p.type === 'Residential').slice(0, 3);
-  const featuredCommercial = properties.filter(p => p.type === 'Commercial').slice(0, 3);
-  const featuredLand = properties.filter(p => p.type === 'Land').slice(0, 3);
-  const featuredMines = properties.filter(p => p.type === 'Mine').slice(0, 3);
+  const featuredResidential = properties.filter(p => p.isFeatured && p.type === 'Residential').slice(0, 3);
+  const featuredCommercial = properties.filter(p => p.isFeatured && p.type === 'Commercial').slice(0, 3);
+  const featuredLand = properties.filter(p => p.isFeatured && p.type === 'Land').slice(0, 3);
+  const featuredMines = properties.filter(p => p.isFeatured && p.type === 'Mine').slice(0, 3);
 
   return (
     <section id="featured" className="py-16 sm:py-24">

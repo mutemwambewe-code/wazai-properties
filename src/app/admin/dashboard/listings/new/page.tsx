@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Trash2, Upload } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Switch } from '@/components/ui/switch';
 
 const HECTARES_IN_ACRE = 0.404686;
 const SQM_IN_HECTARE = 10000;
@@ -36,6 +37,7 @@ export default function NewPropertyPage() {
     images: [],
     zoning: '',
     investmentPotential: '',
+    isFeatured: false,
   });
   
   const [sizeValue, setSizeValue] = useState<number | ''>('');
@@ -230,6 +232,15 @@ export default function NewPropertyPage() {
             <Label htmlFor="title">Title</Label>
             <Input id="title" name="title" value={property.title} onChange={handleInputChange} required/>
           </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="isFeatured"
+              checked={property.isFeatured}
+              onCheckedChange={(checked) => setProperty({ ...property, isFeatured: checked })}
+            />
+            <Label htmlFor="isFeatured">Featured Property</Label>
+          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
@@ -375,5 +386,3 @@ export default function NewPropertyPage() {
     </Card>
   );
 }
-
-    

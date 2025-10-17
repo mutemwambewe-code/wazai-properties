@@ -16,6 +16,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Trash2, Upload } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Switch } from '@/components/ui/switch';
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -69,6 +70,11 @@ export default function EditPropertyPage() {
   const handleSelectChange = (name: keyof Property, value: string) => {
     if (!property) return;
     updateAndSaveProperty({ ...property, [name]: value });
+  };
+
+  const handleFeatureToggle = (isFeatured: boolean) => {
+    if (!property) return;
+    updateAndSaveProperty({ ...property, isFeatured });
   };
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -185,6 +191,15 @@ export default function EditPropertyPage() {
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
             <Input id="title" name="title" value={property.title} onChange={handleInputChange} />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="isFeatured"
+              checked={property.isFeatured}
+              onCheckedChange={handleFeatureToggle}
+            />
+            <Label htmlFor="isFeatured">Featured Property</Label>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

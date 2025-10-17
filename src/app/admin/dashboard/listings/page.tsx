@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { properties as initialProperties, getPropertyByIdFromStorage, savePropertiesToStorage } from "@/lib/data";
+import { properties as initialProperties, savePropertiesToStorage } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
 import { MoreHorizontal, PlusCircle, Trash2, Search } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -13,6 +13,8 @@ import type { Property } from "@/lib/types";
 import Link from "next/link";
 import { Pencil } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 const formatPrice = (price: Property['price']) => {
     return new Intl.NumberFormat('en-US', {
@@ -44,6 +46,14 @@ export default function ListingsManagementPage() {
             savePropertiesToStorage(updatedProperties);
             setPropertyToDelete(null);
         }
+    };
+
+    const handleFeatureToggle = (propertyId: string, isFeatured: boolean) => {
+        const updatedProperties = properties.map(p => 
+            p.id === propertyId ? { ...p, isFeatured } : p
+        );
+        setProperties(updatedProperties);
+        savePropertiesToStorage(updatedProperties);
     };
 
     const filteredProperties = properties.filter(prop =>
@@ -82,6 +92,7 @@ export default function ListingsManagementPage() {
                                 <TableHead>Type</TableHead>
                                 <TableHead>Status</TableHead>
                                 <TableHead>Price</TableHead>
+                                <TableHead>Featured</TableHead>
                                 <TableHead><span className="sr-only">Actions</span></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -92,6 +103,14 @@ export default function ListingsManagementPage() {
                                     <TableCell><Badge variant="outline">{prop.type}</Badge></TableCell>
                                     <TableCell><Badge variant={prop.status === 'For Sale' ? 'default' : 'secondary'}>{prop.status}</Badge></TableCell>
                                     <TableCell>{formatPrice(prop.price)}</TableCell>
+                                    <TableCell>
+                                        <Switch
+                                            id={`featured-${prop.id}`}
+                                            checked={prop.isFeatured}
+                                            onCheckedChange={(checked) => handleFeatureToggle(prop.id, checked)}
+                                            aria-label="Toggle featured"
+                                        />
+                                    </TableCell>
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>

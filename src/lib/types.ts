@@ -34,6 +34,7 @@ export interface Property {
     lat: number;
     lng: number;
   };
+  isFeatured?: boolean;
 }
 
 export interface Testimonial {

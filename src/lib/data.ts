@@ -31,6 +31,7 @@ export const properties: Property[] = [
     ],
     agent: { name: 'John Doe', phone: '+260977123456', email: 'john.doe@zambia.homes' },
     coordinates: { lat: -15.4167, lng: 28.2833 },
+    isFeatured: true,
   },
   {
     id: 'res-1',
@@ -51,6 +52,7 @@ export const properties: Property[] = [
     ],
     agent: { name: 'Jane Smith', phone: '+260966987654', email: 'jane.smith@zambia.homes' },
     coordinates: { lat: -15.431, lng: 28.396 },
+    isFeatured: true,
   },
   {
     id: 'res-2',
@@ -71,6 +73,7 @@ export const properties: Property[] = [
     ],
     agent: { name: 'Jane Smith', phone: '+260966987654', email: 'jane.smith@zambia.homes' },
     coordinates: { lat: -15.385, lng: 28.315 },
+    isFeatured: true,
   },
   {
     id: 'comm-2',
@@ -91,6 +94,7 @@ export const properties: Property[] = [
     ],
     agent: { name: 'John Doe', phone: '+260977123456', email: 'john.doe@zambia.homes' },
     coordinates: { lat: -15.533, lng: 28.366 },
+    isFeatured: false,
   },
 ];
 
